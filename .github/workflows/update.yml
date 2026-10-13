@@ -1,8 +1,6 @@
 name: Update Screener
 
 on:
-  schedule:
-    - cron: '0 0,12 * * *'
   workflow_dispatch:
 
 permissions:
@@ -22,16 +20,3 @@ jobs:
       
       - name: Fetch news
         run: python screener_offline.py
-      
-      - name: Deploy to GitHub Pages
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-      
-      - name: Commit and Push changes
-        run: |
-          git config --global user.name "${{ github.actor }}"
-          git config --global user.email "${{ github.actor }}@users.noreply.github.com"
-          git add .
-          git commit -m "Update data" || echo "No changes to commit"
-          git push
