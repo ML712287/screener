@@ -1,0 +1,14 @@
+{
+  "us": {
+    "channel": "Bloomberg Television",
+    "videos": []
+  },
+  "cn": {
+    "channel": "CGTN",
+    "videos": []
+  },
+  "asia": {
+    "channel": "CNBC International",
+    "videos": []
+  }
+}
