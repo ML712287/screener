@@ -1,121 +1,64 @@
 import os
 import json
-import re
-import time
 import requests
-from pathlib import Path
+import re
 
-API = os.environ.get("YT_API_KEY", "")
+API_KEY = os.environ.get("YT_API_KEY", "").strip()
+if not API_KEY:
+    raise RuntimeError("YT_API_KEY not set")
 
-# 預設財經台（唔指定就唔使改，想加台就加 handle）
 CHANNELS = {
-    "us":   ["@markets", "@BloombergTechnology", "@CNBCtelevision", "@YahooFinance"],
-    "cn":   ["@CGTNBusiness", "@YicaiGlobal"],
-    "asia": ["@CNBCInternational", "@BloombergTV"],
+    "us": {"name": "Bloomberg Television", "channel_id": "UCUMZ7gOHsb0wTTv7m6fzH5g"},
+    "cn": {"name": "CGTN", "channel_id": "UC2Q6tVZlwsEamPs6oQXo6Yg"},
+    "asia": {"name": "CNBC International", "channel_id": "UCvDDvC2tXfW8Kj_m3oqd5qg"}
 }
-PER = 6           # 每區最多取幾條
-MAXSEC = 7200     # 超過2小時當長節目/直播，跳過
-OUT = Path(__file__).resolve().parent / "news.json"
 
+def get_uploads_pid(channel_id):
+    r = requests.get("https://www.googleapis.com/youtube/v3/channels", params={
+        "key": API_KEY, "id": channel_id, "part": "contentDetails"
+    }, timeout=15).json()
+    return r["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
 
-def get(url, **p):
-    p["key"] = API
-    r = requests.get(url, params=p, timeout=30)
-    r.raise_for_status()
-    return r.json()
-
-
-def uploads_id(handle):
-    j = get("https://www.googleapis.com/youtube/v3/channels",
-            part="contentDetails", forHandle=handle)
-    items = j.get("items") or []
-    if not items:
-        return None
-    return items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
-
-
-def iso_seconds(d):
-    if not d:
-        return 0
-    m = re.findall(r"(\d+)([HMS])", d)
-    s = 0
-    for v, u in m:
-        v = int(v)
-        s += v * 3600 if u == "H" else v * 60 if u == "M" else v
-    return s
-
-
-def latest(uploads, n):
-    ids = []
-    tok = None
-    while len(ids) < n * 4:
-        j = get("https://www.googleapis.com/youtube/v3/playlistItems",
-                part="contentDetails", playlistId=uploads,
-                maxResults=50, pageToken=tok)
-        for it in j.get("items", []):
-            vid = it.get("contentDetails", {}).get("videoId")
-            if vid:
-                ids.append(vid)
-        tok = j.get("nextPageToken")
-        if not tok:
-            break
-
-    out = []
-    for i in range(0, len(ids), 50):
-        batch = ids[i:i + 50]
-        if not batch:
+def fetch_videos(playlist_id, max_results=10):
+    r = requests.get("https://www.googleapis.com/youtube/v3/playlistItems", params={
+        "key": API_KEY, "playlistId": playlist_id, "part": "snippet", "maxResults": max_results
+    }, timeout=15).json()
+    
+    vids = [it["snippet"]["resourceId"]["videoId"] for it in r.get("items", [])]
+    if not vids:
+        return []
+    
+    r2 = requests.get("https://www.googleapis.com/youtube/v3/videos", params={
+        "key": API_KEY, "id": ",".join(vids), "part": "snippet,contentDetails,status,liveStreamingDetails"
+    }, timeout=15).json()
+    
+    results = []
+    for v in r2.get("items", []):
+        if v.get("status", {}).get("embeddable") is False:
             continue
-        j = get("https://www.googleapis.com/youtube/v3/videos",
-                part="snippet,contentDetails,status,liveStreamingDetails",
-                id=",".join(batch))
-        for v in j.get("items", []):
-            # 剔走直播
-            if v.get("liveStreamingDetails"):
-                continue
-            if v.get("snippet", {}).get("liveBroadcastContent", "none") != "none":
-                continue
-            # 剔走禁嵌入
-            if v.get("status", {}).get("embeddable") is False:
-                continue
-            # 剔走太長
-            dur = iso_seconds(v.get("contentDetails", {}).get("duration", "PT0S"))
-            if dur <= 0 or dur > MAXSEC:
-                continue
-            out.append({
-                "id": v["id"],
-                "title": v["snippet"].get("title", ""),
-                "pub": v["snippet"].get("publishedAt", ""),
-            })
-            if len(out) >= n:
-                return out
-    return out
+        if v["snippet"].get("liveBroadcastContent") in ("live", "upcoming"):
+            continue
+        dur = v["contentDetails"]["duration"]
+        mins = 0
+        m = re.search(r'PT(?:(\d+)H)?(?:(\d+)M)?', dur)
+        if m:
+            mins = int(m.group(2) or 0) + int(m.group(1) or 0) * 60
+        if mins > 30 or mins < 1:
+            continue
+        results.append({"id": v["id"], "title": v["snippet"]["title"], "channel": v["snippet"]["channelTitle"]})
+        if len(results) >= 3:
+            break
+    return results
 
+news = {}
+for region, info in CHANNELS.items():
+    try:
+        pid = get_uploads_pid(info["channel_id"])
+        news[region] = {"channel": info["name"], "videos": fetch_videos(pid)}
+    except Exception as e:
+        print(f"{region} error: {e}")
+        news[region] = {"channel": info["name"], "videos": []}
 
-def main():
-    res = {"us": [], "cn": [], "asia": []}
-    for cat, handles in CHANNELS.items():
-        for h in handles:
-            try:
-                up = uploads_id(h)
-                if up:
-                    res[cat] += latest(up, PER)
-            except Exception as e:
-                print(f"skip {h}: {e}")
-            time.sleep(0.2)
-
-    # 去重、截短
-    for cat in res:
-        seen, tmp = set(), []
-        for x in res[cat]:
-            if x["id"] in seen:
-                continue
-            seen.add(x["id"])
-            tmp.append(x)
-        res[cat] = tmp[:PER]
-
-    OUT.write_text(json.dumps(res, ensure_ascii=False, indent=2), encoding="utf-8")
-    print("news.json saved:", {k: len(v) for k, v in res.items()})
-
-
-if __name__ == "__main__":
-    main()
+with open("news.json", "w", encoding="utf-8") as f:
+    json.dump(news, f, ensure_ascii=False, indent=2)
+print("Done! news.json written.")
