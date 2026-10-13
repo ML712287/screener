@@ -24,53 +24,33 @@ stocks = [
     {"code": "0700.HK", "name": "騰訊控股", "rating": "B+", "price": 420.0, "entry": "400-410", "target": 480.0, "note": "AI概念回調吸納"},
 ]
 
-# ===== 新聞區 HTML =====
-def news_section():
+# ===== 生成 News Section HTML 嘅函數 =====
+def generate_news_html(news_data):
     if not news_data:
         return ""
-    all_v = []
-    for reg, info in news_data.items():
-        for v in info.get("videos", []):
-            all_v.append({"id": v["id"], "title": v["title"], "channel": v.get("channel", info["channel"]), "region": reg,
-                          "rname": {"us": "🇺🇸 美國", "cn": "🇨🇳 中國", "asia": "🌏 亞洲"}.get(reg, reg)})
-    if not all_v:
+    regions = list(news_data.keys())
+    if not regions:
         return ""
-    first = all_v[0]
-    items = "".join(f'<div class="ni" data-r="{v["region"]}" onclick="playV(\'{v["id"]}\',this)"><span class="nf">{v["rname"]}</span><span class="nt">{v["title"][:55]}{"..." if len(v["title"])>55 else ""}</span></div>' for v in all_v)
-    btns = '<button class="nb active" onclick="fN(\'all\',this)">全部</button><button class="nb" onclick="fN(\'us\',this)">🇺🇸 美國</button><button class="nb" onclick="fN(\'cn\',this)">🇨🇳 中國</button><button class="nb" onclick="fN(\'asia\',this)">🌏 亞洲</button>'
-    return f"""
-<style>
-.news-sec{{margin:32px 0;padding:24px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.3)}}
-.news-sec h2{{color:#e94560;margin-bottom:16px}}
-.nc{{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}}
-.nb{{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer;transition:.3s;font-size:14px}}
-.nb.active,.nb:hover{{background:#e94560;color:#fff}}
-.npa{{display:grid;grid-template-columns:2fr 1fr;gap:16px}}
-.nvw{{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px}}
-.nvw iframe{{position:absolute;top:0;left:0;width:100%;height:100%}}
-.nl{{max-height:315px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}}
-.ni{{display:flex;align-items:flex-start;gap:8px;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer;transition:.2s}}
-.ni:hover,.ni.active{{background:rgba(233,69,96,.2)}}
-.nf{{font-size:12px;white-space:nowrap}}
-.nt{{font-size:13px;color:#ccc;line-height:1.4}}
-@media(max-width:768px){{.npa{{grid-template-columns:1fr}}}}
-</style>
-<section class="news-sec">
-<h2>📺 國際財經新聞</h2>
-<div class="nc">{btns}</div>
-<div class="npa">
-<div class="nvw"><iframe id="nf" src="https://www.youtube-nocookie.com/embed/{first['id']}?rel=0" frameborder="0" allowfullscreen></iframe></div>
-<div class="nl">{items}</div>
-</div>
-</section>
-<script>
-const AV={json.dumps(all_v, ensure_ascii=False)};
-let CF='all',RT=null;
-function playV(i,e){{document.getElementById('nf').src='https://www.youtube-nocookie.com/embed/'+i+'?autoplay=1&rel=0';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));if(e)e.classList.add('active');if(RT){{clearInterval(RT);RT=setInterval(AR,60000)}}}}
-function fN(r,b){{CF=r;document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');document.querySelectorAll('.ni').forEach(x=>{{x.style.display=(r==='all'||x.dataset.r===r)?'flex':'none'}})}}
-let RI=0;function AR(){{const V=AV.filter(x=>CF==='all'||x.region===CF);if(V.length<=1)return;RI=(RI+1)%V.length;playV(V[RI].id,null)}}
-RT=setInterval(AR,60000);
-</script>"""
+    first_region = regions[0]
+
+    html = '<div class="news-sec"><h2>News</h2>'
+    html += '<div class="nc">'
+    for r in regions:
+        active = " active" if r == first_region else ""
+        html += f'<button class="nb{active}" onclick="fN(\'{r}\',this)">{r.upper()}</button>'
+    html += '</div>'
+
+    for r in regions:
+        display = "" if r == first_region else "none"
+        html += f'<div id="nv-{r}" style="display:{display}">'
+        html += f'<div class="npw"><div class="nvw" id="player-{r}"></div></div>'
+        html += '<div class="nl">'
+        for v in news_data[r].get("videos", []):
+            html += f'<div class="ni" data-r="{r}" onclick="playV(\'{v["id"]}\',this)"><span class="nf">{v["title"]}</span></div>'
+        html += '</div></div>'
+
+    html += '</div>'
+    return html
 
 # ===== 股票卡片 =====
 def stock_card(s):
@@ -86,7 +66,7 @@ def stock_card(s):
 <div class="note">{s["note"]}</div>
 </div>'''
 
-# ===== 完整 HTML =====
+# ===== 完整 HTML（CSS + 內容 + JS）=====
 css = """
 <style>
 body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#e0e0e0;margin:0;padding:20px;min-height:100vh}
@@ -109,11 +89,24 @@ h1{text-align:center;color:#fff;font-size:2em;margin-bottom:.2em}
 .fill{height:100%;border-radius:3px;transition:width 1s}
 .info{display:flex;justify-content:space-between;font-size:12px;color:#aaa;margin-bottom:8px}
 .note{font-size:12px;color:#888;font-style:italic}
+.news-sec{margin:32px 0;padding:24px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.news-sec h2{color:#e94560;margin-bottom:16px}
+.nc{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.nb{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer;transition:.3s;font-size:14px}
+.nb.active,.nb:hover{background:#e94560;color:#fff}
+.npw{margin-bottom:16px}
+.nvw{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px}
+.nvw iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+.nl{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto}
+.ni{display:flex;align-items:flex-start;gap:8px;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer;transition:.2s}
+.ni:hover,.ni.active{background:rgba(233,69,96,.2)}
+.nf{font-size:12px;white-space:nowrap}
+.nt{font-size:13px;color:#ccc;line-height:1.4}
 </style>"""
 
 macro_html = "".join(f'<div class="mitem"><div class="label">{k}</div><div class="val">{v}</div></div>' for k, v in macro.items())
 cards_html = "".join(stock_card(s) for s in stocks)
-news_html = news_section()
+news_html = generate_news_html(news_data)
 
 html = f"""<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -132,37 +125,44 @@ html = f"""<!DOCTYPE html>
 {news_html}
 <div class="grid">{cards_html}</div>
 </div>
-</body>
-</html>"""
+"""
 
+# ===== YouTube iFrame API + 互動 JS =====
+js_code = """
+<script>
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+var players = {};
+function onYouTubeIframeAPIReady() {
+    document.querySelectorAll('.nvw').forEach(function(el) {
+        var region = el.id.replace('player-','');
+        players[region] = new YT.Player(el.id, { height: '100%', width: '100%', playerVars: { 'playsinline': 1 } });
+    });
+}
+function playV(id, el) {
+    var region = el.getAttribute('data-r');
+    if(players[region]) {
+        players[region].loadVideoById(id);
+        players[region].playVideo();
+    }
+    document.querySelectorAll('.ni.active').forEach(function(n) { n.classList.remove('active'); });
+    el.classList.add('active');
+}
+function fN(region, btn) {
+    document.querySelectorAll('.nb.active').forEach(function(n) { n.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('[id^="nv-"]').forEach(function(n) { n.style.display = 'none'; });
+    document.getElementById('nv-' + region).style.display = '';
+}
+</script>
+"""
+
+html += js_code + "\n</body>\n</html>"
+
+# ===== 寫入 HTML 檔 =====
 with open("report.html", "w", encoding="utf-8") as f:
     f.write(html)
 print("report.html generated!")
-# ===== 生成 News Section HTML =====
-def generate_news_html(news_data):
-    if not news_data: return ""
-    regions = list(news_data.keys())
-    first_region = regions[0] if regions else ""
-    
-    html = f'<div class="news-sec"><h2>News</h2>'
-    html += f'<div class="nc">'
-    for r in regions:
-        active = " active" if r == first_region else ""
-        html += f'<button class="nb{active}" onclick="fN(\'{r}\',this)">{r.upper()}</button>'
-    html += '</div>'
-    
-    for r in regions:
-        display = "" if r == first_region else "none"
-        html += f'<div id="nv-{r}" style="display:{display}">'
-        html += f'<div class="npw"><div class="nvw" id="player-{r}"></div></div>'
-        html += f'<div class="nl">'
-        for v in news_data[r].get("videos", []):
-            html += f'<div class="ni" data-r="{r}" onclick="playV(\'{v["id"]}\',this)"><span class="nf">{v["title"]}</span></div>'
-        html += '</div></div>'
-    html += '</div>'
-    return html
-
-# 輸出到頁面（假設你個程式用 print 或寫入 html 檔）
-# 將 News Section 加落 HTML
-html += generate_news_html(news_data)
