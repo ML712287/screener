@@ -134,6 +134,8 @@ html = f"""<!DOCTYPE html>
 </div>
 </body>
 </html>"""
+# 將 News Section 加落 HTML
+html += generate_news_html(news_data)
 
 with open("report.html", "w", encoding="utf-8") as f:
     f.write(html)
@@ -163,4 +165,4 @@ def generate_news_html(news_data):
     return html
 
 # 輸出到頁面（假設你個程式用 print 或寫入 html 檔）
-print(generate_news_html(news_data))
+
