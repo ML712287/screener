@@ -1,7 +1,6 @@
 import os
 import json
 import requests
-from datetime import datetime, timedelta
 
 API_KEY = os.environ.get("YT_API_KEY")
 CHANNELS = {
@@ -21,8 +20,10 @@ def fetch_videos(playlist_id):
     if not playlist_id: return []
     url = f"https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=10&playlistId={playlist_id}&key={API_KEY}"
     data = requests.get(url).json()
+    
     videos = []
-    for item in data.get("videos", []):
+    # 修正：正確路徑係 items -> snippet -> resourceId -> videoId
+    for item in data.get("items", []):
         vid = item["snippet"]["resourceId"]["videoId"]
         title = item["snippet"]["title"]
         thumb = item["snippet"]["thumbnails"]["default"]["url"]
