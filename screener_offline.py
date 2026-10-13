@@ -413,7 +413,7 @@ def main():
     for r in filtered:
         print(f"  {r['color']} [{r['market_label']}] {r['symbol']} {r['name']}  PE={r['pe']} 息={r['div_yield']}%  ROE={r['roe']}%")
     html = gen_html(results, filtered, season_global, season_cn, score)
-    out = r"C:\Users/Plus-P06\Desktop\Screener/report.html"
+    out = "report.html"
     with open(out, "w", encoding="utf-8") as f: f.write(html)
     print(f"\n✅ 已生成：{out}")
 
