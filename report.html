@@ -2,92 +2,25 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>股票篩選器</title>
+<title>股票筛选器</title>
 
 <style>
 body{background:#111;color:#fff;font-family:sans-serif;margin:0;padding:20px}
 .container{max-width:800px;margin:0 auto}
-h1{color:#4fc3f7}
-.sub{color:#aaa;margin-bottom:20px}
-.macro{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
-.mitem{background:#222;padding:10px 15px;border-radius:8px;text-align:center}
-.label{color:#aaa;font-size:12px}
-.val{font-size:20px;font-weight:bold;color:#4fc3f7}
-.season-bar{background:#222;padding:10px 15px;border-radius:8px;margin-bottom:20px;display:flex;justify-content:space-between}
-.news-sec{padding:20px;background:#1a1a1a;border-radius:12px;margin-bottom:20px}
-.nc{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
-.nb{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer}
-.nb.active,.nb:hover{background:#e94560;color:#fff}
-.npw{margin-bottom:16px;display:none}
-.npw.active{display:block}
-.nvw{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px;background:#000}
-.nvw iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
-.nl{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto}
-.ni{padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer}
-.ni:hover,.ni.active{background:rgba(233,69,96,.2)}
-.grid{display:flex;gap:15px;flex-wrap:wrap}
-.card{background:#222;padding:15px;border-radius:10px;min-width:120px;text-align:center}
+.news-sec{padding:20px;background:#222;border-radius:12px;margin-top:20px}
 </style>
 
 </head>
 <body>
 <div class="container">
-<h1>📊 智能股票篩選器</h1>
-<div class="sub">Offline Screener · 最後更新：2026-10-13 11:34</div>
-<div class="macro"><div class="mitem"><div class="label">us 美國 CPI</div><div class="val">2.5%</div></div><div class="mitem"><div class="label">us ISM PMI</div><div class="val">54.9</div></div><div class="mitem"><div class="label">us 10年債</div><div class="val">5.19%</div></div><div class="mitem"><div class="label">cn 中國 PMI</div><div class="val">50.6</div></div></div>
-<div class="season-bar"><span>🗓️ 季節：<strong>秋季</strong></span><span class="pos">建議倉位：60%</span></div>
-
-<div class="news-sec">
-    <h2>📰 最新新聞與影片</h2>
-    <div class="nc"><button class="nb" onclick="fN('科技', this)">科技</button><button class="nb" onclick="fN('財經', this)">財經</button></div>
-    
-    <div class="npw" id="nv-科技">
-        <div class="nvw" id="player-科技"></div>
-        <div class="nl"><div class="ni" data-r="科技" onclick="playV('dQw4w9WgXcQ', this)">AI 概念股持續炒上</div></div>
-    </div>
-    <div class="npw" id="nv-財經">
-        <div class="nvw" id="player-財經"></div>
-        <div class="nl"><div class="ni" data-r="財經" onclick="playV('9bZkp7q19f0', this)">美債息率回落 大市反彈</div></div>
-    </div>
+<h1>智能股票筛选器</h1>
+<div style="color:#aaa;margin-bottom:20px;">最后更新：2026-10-13 11:36</div>
+<div style="margin-bottom:20px;"><div style="background:#222;padding:10px 15px;border-radius:8px;text-align:center;display:inline-block;margin-right:10px;"><div style="color:#aaa;font-size:12px;">恒指</div><div style="font-size:20px;font-weight:bold;color:#4fc3f7;">18000</div></div><div style="background:#222;padding:10px 15px;border-radius:8px;text-align:center;display:inline-block;margin-right:10px;"><div style="color:#aaa;font-size:12px;">纳指</div><div style="font-size:20px;font-weight:bold;color:#4fc3f7;">15000</div></div></div>
+<div style="background:#222;padding:10px 15px;border-radius:8px;margin-bottom:20px;display:flex;justify-content:space-between;">
+<span>季节：秋季</span><span>建议仓位：50%</span>
 </div>
-
-<div class="grid"><div class="card"><h3>AAPL</h3><p>Apple</p></div><div class="card"><h3>TSLA</h3><p>Tesla</p></div><div class="card"><h3>NVDA</h3><p>NVIDIA</p></div></div>
+<div class="news-sec"><h2>News 区测试</h2><div id="nv-测试" style="display:block;"><div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;border-radius:12px;"><iframe id="player-测试" src="https://www.youtube.com/embed/dQw4w9WgXcQ" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div><div style="margin-top:10px;"><div style="padding:10px;background:#333;border-radius:8px;margin-bottom:5px;cursor:pointer;">测试片：Rick Astley</div></div></div></div>
+<div style="margin-top:20px;"><div style="background:#222;padding:15px;border-radius:10px;min-width:120px;text-align:center;display:inline-block;margin-right:10px;"><h3>00700</h3><p>腾讯</p></div></div>
 </div>
-
-<script>
-var tag = document.createElement('script');
-tag.src = "https://www.youtube.com/iframe_api";
-var firstScriptTag = document.getElementsByTagName('script')[0];
-firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-var players = {};
-function onYouTubeIframeAPIReady() {
-    document.querySelectorAll('.nvw').forEach(function(el) {
-        var region = el.id.replace('player-','');
-        players[region] = new YT.Player(el.id, { height: '100%', width: '100%', playerVars: { 'playsinline': 1 } });
-    });
-}
-function playV(id, el) {
-    var region = el.getAttribute('data-r');
-    if(players[region]) {
-        players[region].loadVideoById(id);
-        players[region].playVideo();
-    }
-    document.querySelectorAll('.ni.active').forEach(function(n) { n.classList.remove('active'); });
-    el.classList.add('active');
-}
-function fN(region, btn) {
-    document.querySelectorAll('.nb.active').forEach(function(n) { n.classList.remove('active'); });
-    btn.classList.add('active');
-    document.querySelectorAll('.npw').forEach(function(n) { n.style.display = 'none'; });
-    document.getElementById('nv-' + region).style.display = 'block';
-}
-// 默認顯示第一個分類
-window.onload = function() {
-    var firstBtn = document.querySelector('.nb');
-    if(firstBtn) { firstBtn.click(); }
-}
-</script>
-
 </body>
 </html>
