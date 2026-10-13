@@ -1,7 +1,6 @@
-from datetime import datetime
-import datetime
+import time
 
-# ===== 假數據測試 =====
+# ===== 模擬數據 =====
 news_data = {
     "HK": {
         "videos": [
@@ -15,6 +14,11 @@ news_data = {
         ]
     }
 }
+
+macro = {"恒指": "18000", "納指": "15000"}
+stocks = [{"code": "00700", "name": "騰訊"}]
+season = "Q4"
+position = "50%"
 
 # ===== 生成 News Section HTML =====
 def generate_news_html(news_data):
@@ -57,18 +61,28 @@ css = """
 """
 
 # ===== 組裝 HTML =====
+macro_html = "".join(f'<div class="mitem"><div class="label">{k}</div><div class="val">{v}</div></div>' for k, v in macro.items())
+cards_html = "".join(f'<div class="card"><h3>{s["code"]}</h3><p>{s["name"]}</p></div>' for s in stocks)
+news_html = generate_news_html(news_data)
+
+# 使用 time.strftime 替代 datetime，徹底解決報錯
+current_time = time.strftime('%Y-%m-%d %H:%M')
+
 html = f"""<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<title>測試頁面</title>
+<title>股票篩選器</title>
 {css}
 </head>
 <body>
 <div class="container">
-<h1>📊 測試頁面</h1>
-<div class="sub">最後更新：{datetime.now().strftime('%Y-%m-%d %H:%M')}</div>
-{generate_news_html(news_data)}
+<h1>📊 智能股票篩選器</h1>
+<div class="sub">最後更新：{current_time}</div>
+<div class="macro">{macro_html}</div>
+<div class="season-bar"><span>🗓️ 季節：<strong>{season}</strong></span><span class="pos">建議倉位：{position}</span></div>
+{news_html}
+<div class="grid">{cards_html}</div>
 </div>
 """
 
