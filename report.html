@@ -2,77 +2,30 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>股票篩選器</title>
 
 <style>
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#0f0c29,#302b63,#24243e);color:#e0e0e0;margin:0;padding:20px;min-height:100vh}
-.container{max-width:1200px;margin:0 auto}
-h1{text-align:center;color:#fff;font-size:2em;margin-bottom:.2em}
-.sub{text-align:center;color:#aaa;margin-bottom:24px}
-.macro{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px}
-.mitem{background:rgba(255,255,255,.08);padding:16px;border-radius:12px;text-align:center;backdrop-filter:blur(10px)}
-.mitem .label{font-size:12px;color:#aaa}.mitem .val{font-size:20px;font-weight:bold;color:#e94560}
-.season-bar{background:rgba(255,255,255,.08);padding:16px;border-radius:12px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center}
-.season-bar .pos{font-size:24px;font-weight:bold;color:#00ff88}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
-.card{background:linear-gradient(145deg,rgba(255,255,255,.1),rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:20px;backdrop-filter:blur(10px);transition:transform .3s,box-shadow .3s}
-.card:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,.4)}
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.code{font-weight:bold;color:#fff}.rating{padding:4px 10px;border-radius:12px;font-size:12px;font-weight:bold}
-.name{color:#aaa;font-size:14px;margin-bottom:8px}
-.price{font-size:28px;font-weight:bold;color:#fff;margin-bottom:12px}
-.bar{height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-bottom:12px}
-.fill{height:100%;border-radius:3px;transition:width 1s}
-.info{display:flex;justify-content:space-between;font-size:12px;color:#aaa;margin-bottom:8px}
-.note{font-size:12px;color:#888;font-style:italic}
-.news-sec{margin:32px 0;padding:24px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
-.news-sec h2{color:#e94560;margin-bottom:16px}
-.nc{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.nb{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer;transition:.3s;font-size:14px}
+.news-sec{padding:20px;background:#111;color:#fff;margin-top:20px;border-radius:12px}
+.nc{display:flex;gap:10px;margin-bottom:15px;flex-wrap:wrap}
+.nb{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer}
 .nb.active,.nb:hover{background:#e94560;color:#fff}
 .npw{margin-bottom:16px}
 .nvw{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px}
 .nvw iframe{position:absolute;top:0;left:0;width:100%;height:100%}
 .nl{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto}
-.ni{display:flex;align-items:flex-start;gap:8px;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer;transition:.2s}
+.ni{padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer}
 .ni:hover,.ni.active{background:rgba(233,69,96,.2)}
-.nf{font-size:12px;white-space:nowrap}
-.nt{font-size:13px;color:#ccc;line-height:1.4}
 </style>
+
 </head>
 <body>
 <div class="container">
 <h1>📊 智能股票篩選器</h1>
-<div class="sub">最後更新：2026-10-13 10:48</div>
-<div class="macro"><div class="mitem"><div class="label">US CPI</div><div class="val">2.5%</div></div><div class="mitem"><div class="label">US ISM PMI</div><div class="val">54.9</div></div><div class="mitem"><div class="label">US Fed Rate</div><div class="val">4.25%~4.50%</div></div><div class="mitem"><div class="label">China CPI</div><div class="val">0.3%</div></div><div class="mitem"><div class="label">Gold</div><div class="val">2,650</div></div><div class="mitem"><div class="label">Oil (WTI)</div><div class="val">71.2</div></div></div>
-<div class="season-bar"><span>🗓️ 季節：<strong>秋季（偏防禦）</strong></span><span class="pos">建議倉位：50% ~ 60%</span></div>
-<div class="news-sec"><h2>News</h2><div class="nc"><button class="nb active" onclick="fN('us',this)">US</button><button class="nb" onclick="fN('cn',this)">CN</button><button class="nb" onclick="fN('asia',this)">ASIA</button></div><div id="nv-us" style="display:"><div class="npw"><div class="nvw" id="player-us"></div></div><div class="nl"></div></div><div id="nv-cn" style="display:none"><div class="npw"><div class="nvw" id="player-cn"></div></div><div class="nl"><div class="ni" data-r="cn" onclick="playV('WkiUwyHmRnk',this)"><span class="nf">From calls to action: How international guests view 12345 hotline</span></div><div class="ni" data-r="cn" onclick="playV('NxEd-9t4wyw',this)"><span class="nf">12345 – a magical number in China!</span></div><div class="ni" data-r="cn" onclick="playV('apgUnojwJwA',this)"><span class="nf">Hotline 12345: One call, one better city</span></div><div class="ni" data-r="cn" onclick="playV('7tUk_qi2LNU',this)"><span class="nf">Can smarter hotlines bring warmth to citizens' hearts?</span></div><div class="ni" data-r="cn" onclick="playV('TRQu2OLAcyE',this)"><span class="nf">Man climbs building to save child hanging from sixth-floor window in China #coolchina</span></div><div class="ni" data-r="cn" onclick="playV('S6PVEk47hXE',this)"><span class="nf">No standard answers, only common solutions</span></div><div class="ni" data-r="cn" onclick="playV('ROdOeHpcAxE',this)"><span class="nf">Wang Yi meets Russian presidential aide Nikolai Patrushev in Beijing</span></div><div class="ni" data-r="cn" onclick="playV('hF1qrhoeq58',this)"><span class="nf">How does Beijing serve residents from 70+ countries? A new approach to community governance</span></div><div class="ni" data-r="cn" onclick="playV('LgmiC386hEM',this)"><span class="nf">Chinese desert fighter to reunite with American friend in Rome</span></div><div class="ni" data-r="cn" onclick="playV('NOheKIz1HQ4',this)"><span class="nf">A new Middle East security architecture?</span></div></div></div><div id="nv-asia" style="display:none"><div class="npw"><div class="nvw" id="player-asia"></div></div><div class="nl"><div class="ni" data-r="asia" onclick="playV('6HchQ48X_cM',this)"><span class="nf">It Never Hurts to Have a Conversation | e.l.f. Beauty CEO Tarang Amin</span></div><div class="ni" data-r="asia" onclick="playV('1O5WKpSmOYo',this)"><span class="nf">Why AI could change mobile networks forever</span></div><div class="ni" data-r="asia" onclick="playV('bLElMR7cgAc',this)"><span class="nf">2PointZero CEO On AI, Energy And Global Expansion</span></div><div class="ni" data-r="asia" onclick="playV('H7Vm6Ed-wj0',this)"><span class="nf">You Can’t Engineer the Timing | State Street CEO Ron O’Hanley</span></div><div class="ni" data-r="asia" onclick="playV('yIDX-ReEvhA',this)"><span class="nf">Inside The Hidden Bottleneck In The AI Chip Boom</span></div><div class="ni" data-r="asia" onclick="playV('0dD6-vPX4JQ',this)"><span class="nf">Why Japan’s Weak Yen Is So Hard to Fix</span></div><div class="ni" data-r="asia" onclick="playV('FoHxFYNNyNk',this)"><span class="nf">AI, Agents and Quantum: The Biggest Cyber Threats Ahead</span></div><div class="ni" data-r="asia" onclick="playV('RxonXJlEJd8',this)"><span class="nf">Inside Majid Al Futtaim’s Nearly $30 Billion Expansion</span></div><div class="ni" data-r="asia" onclick="playV('xEtXO_97xEg',this)"><span class="nf">Take the Reckless Path | Standard Chartered CEO Bill Winters</span></div><div class="ni" data-r="asia" onclick="playV('QDwcxkzBYyY',this)"><span class="nf">China Is Closing The Gap. Can The West Keep Its AI Lead?</span></div></div></div></div>
-<div class="grid">
-<div class="card">
-<div class="card-header"><span class="code">0002.HK</span><span class="rating" style="background:#00ff8820;color:#00ff88;border:1px solid #00ff88">A</span></div>
-<div class="name">中電控股</div>
-<div class="price">$65.2</div>
-<div class="bar"><div class="fill" style="width:93.14285714285715%;background:#00ff88"></div></div>
-<div class="info"><span>入貨位: 62.0-63.5</span><span>目標: $70.0</span></div>
-<div class="note">高息公用，防守之選</div>
-</div>
-<div class="card">
-<div class="card-header"><span class="code">0003.HK</span><span class="rating" style="background:#88ff0020;color:#88ff00;border:1px solid #88ff00">A-</span></div>
-<div class="name">香港中華煤氣</div>
-<div class="price">$12.8</div>
-<div class="bar"><div class="fill" style="width:88.27586206896552%;background:#88ff00"></div></div>
-<div class="info"><span>入貨位: 12.0-12.5</span><span>目標: $14.5</span></div>
-<div class="note">穩定現金流</div>
-</div>
-<div class="card">
-<div class="card-header"><span class="code">0700.HK</span><span class="rating" style="background:#ffaa0020;color:#ffaa00;border:1px solid #ffaa00">B+</span></div>
-<div class="name">騰訊控股</div>
-<div class="price">$420.0</div>
-<div class="bar"><div class="fill" style="width:87.5%;background:#ffaa00"></div></div>
-<div class="info"><span>入貨位: 400-410</span><span>目標: $480.0</span></div>
-<div class="note">AI概念回調吸納</div>
-</div></div>
+<div class="sub">最後更新：2026-10-13 11:06</div>
+<div class="macro"><div class="mitem"><div class="label">恒指</div><div class="val">18000</div></div><div class="mitem"><div class="label">納指</div><div class="val">15000</div></div></div>
+<div class="season-bar"><span>🗓️ 季節：<strong>Q4</strong></span><span class="pos">建議倉位：50%</span></div>
+<div class="news-sec"><h2>News</h2><div class="nc"><button class="nb active" onclick="fN('HK',this)">HK</button><button class="nb" onclick="fN('US',this)">US</button></div><div id="nv-HK" style="display:"><div class="npw"><div class="nvw" id="player-HK"></div></div><div class="nl"><div class="ni" data-r="HK" onclick="playV('dQw4w9WgXcQ',this)"><span class="nf">Test Video 1</span></div><div class="ni" data-r="HK" onclick="playV('9bZkp7q19f0',this)"><span class="nf">Test Video 2</span></div></div></div><div id="nv-US" style="display:none"><div class="npw"><div class="nvw" id="player-US"></div></div><div class="nl"><div class="ni" data-r="US" onclick="playV('L_jWHffIx5E',this)"><span class="nf">Test Video 3</span></div></div></div></div>
+<div class="grid"><div class="card"><h3>00700</h3><p>騰訊</p></div></div>
 </div>
 
 <script>
