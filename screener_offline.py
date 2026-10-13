@@ -138,3 +138,29 @@ html = f"""<!DOCTYPE html>
 with open("report.html", "w", encoding="utf-8") as f:
     f.write(html)
 print("report.html generated!")
+# ===== 生成 News Section HTML =====
+def generate_news_html(news_data):
+    if not news_data: return ""
+    regions = list(news_data.keys())
+    first_region = regions[0] if regions else ""
+    
+    html = f'<div class="news-sec"><h2>News</h2>'
+    html += f'<div class="nc">'
+    for r in regions:
+        active = " active" if r == first_region else ""
+        html += f'<button class="nb{active}" onclick="fN(\'{r}\',this)">{r.upper()}</button>'
+    html += '</div>'
+    
+    for r in regions:
+        display = "" if r == first_region else "none"
+        html += f'<div id="nv-{r}" style="display:{display}">'
+        html += f'<div class="npw"><div class="nvw" id="player-{r}"></div></div>'
+        html += f'<div class="nl">'
+        for v in news_data[r].get("videos", []):
+            html += f'<div class="ni" data-r="{r}" onclick="playV(\'{v["id"]}\',this)"><span class="nf">{v["title"]}</span></div>'
+        html += '</div></div>'
+    html += '</div>'
+    return html
+
+# 輸出到頁面（假設你個程式用 print 或寫入 html 檔）
+print(generate_news_html(news_data))
