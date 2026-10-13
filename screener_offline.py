@@ -1,33 +1,24 @@
 import time
 
-# ===== 模擬數據 =====
-news_data = {
-    "HK": {
-        "videos": [
-            {"id": "dQw4w9WgXcQ", "title": "Test Video 1"},
-            {"id": "9bZkp7q19f0", "title": "Test Video 2"}
-        ]
-    },
-    "US": {
-        "videos": [
-            {"id": "L_jWHffIx5E", "title": "Test Video 3"}
-        ]
-    }
-}
-
-macro = {"恒指": "18000", "納指": "15000"}
-stocks = [{"code": "00700", "name": "騰訊"}]
-season = "Q4"
+# ===== 模擬數據 (硬編碼測試用) =====
+macro = {"恒指": "18000", "成交": "1000億"}
+stocks = [{"code": "0005", "name": "滙豐"}]
+season = "秋季"
 position = "50%"
 
-# ===== 生成 News Section HTML =====
+# 硬塞兩條真實 YouTube 片測試
+news_data = {
+    "hk": {"videos": [{"id": "dQw4w9WgXcQ", "title": "測試片 HK (粵語)"}]},
+    "us": {"videos": [{"id": "9bZkp7q19f0", "title": "測試片 US (英文)"}]}
+}
+
+# ===== 新聞 HTML 生成函數 =====
 def generate_news_html(news_data):
-    if not news_data: return ""
+    html = '<div class="news-sec"><h2>News</h2>'
     regions = list(news_data.keys())
-    first_region = regions[0] if regions else ""
+    first_region = regions[0] if regions else None
     
-    html = f'<div class="news-sec"><h2>News</h2>'
-    html += f'<div class="nc">'
+    html += '<div class="nc">'
     for r in regions:
         active = " active" if r == first_region else ""
         html += f'<button class="nb{active}" onclick="fN(\'{r}\',this)">{r.upper()}</button>'
@@ -65,7 +56,6 @@ macro_html = "".join(f'<div class="mitem"><div class="label">{k}</div><div class
 cards_html = "".join(f'<div class="card"><h3>{s["code"]}</h3><p>{s["name"]}</p></div>' for s in stocks)
 news_html = generate_news_html(news_data)
 
-# 使用 time.strftime 替代 datetime，徹底解決報錯
 current_time = time.strftime('%Y-%m-%d %H:%M')
 
 html = f"""<!DOCTYPE html>
@@ -120,7 +110,6 @@ function fN(region, btn) {
 """
 html += js_code + "\n</body>\n</html>"
 
-# ===== 寫入檔案 =====
 with open("report.html", "w", encoding="utf-8") as f:
     f.write(html)
 print("report.html generated!")
