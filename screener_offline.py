@@ -10,7 +10,7 @@ season = "秋季"
 position = "50%"
 
 def generate_news_html(news_data):
-    html = '<div class="news-sec"><h2>News 区测试</h2>'
+    html = '<div class="news-section"><h2>News 区测试</h2>'
     for region, items in news_data.items():
         html += f'<div id="nv-{region}" style="display:block;">'
         html += f'<div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:#000;border-radius:12px;"><iframe id="player-{region}" src="https://www.youtube.com/embed/{items[0]["id"]}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>'
@@ -25,7 +25,7 @@ css = """
 <style>
 body{background:#111;color:#fff;font-family:sans-serif;margin:0;padding:20px}
 .container{max-width:800px;margin:0 auto}
-.news-sec{padding:20px;background:#222;border-radius:12px;margin-top:20px}
+.news-section{padding:20px;background:#222;border-radius:12px;margin-top:20px}
 </style>
 """
 
