@@ -26,47 +26,28 @@ h1{text-align:center;color:#fff;font-size:2em;margin-bottom:.2em}
 .fill{height:100%;border-radius:3px;transition:width 1s}
 .info{display:flex;justify-content:space-between;font-size:12px;color:#aaa;margin-bottom:8px}
 .note{font-size:12px;color:#888;font-style:italic}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>📊 智能股票篩選器</h1>
-<div class="sub">最後更新：2026-10-13 10:42</div>
-<div class="macro"><div class="mitem"><div class="label">US CPI</div><div class="val">2.5%</div></div><div class="mitem"><div class="label">US ISM PMI</div><div class="val">54.9</div></div><div class="mitem"><div class="label">US Fed Rate</div><div class="val">4.25%~4.50%</div></div><div class="mitem"><div class="label">China CPI</div><div class="val">0.3%</div></div><div class="mitem"><div class="label">Gold</div><div class="val">2,650</div></div><div class="mitem"><div class="label">Oil (WTI)</div><div class="val">71.2</div></div></div>
-<div class="season-bar"><span>🗓️ 季節：<strong>秋季（偏防禦）</strong></span><span class="pos">建議倉位：50% ~ 60%</span></div>
-
-<style>
 .news-sec{margin:32px 0;padding:24px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
 .news-sec h2{color:#e94560;margin-bottom:16px}
 .nc{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
 .nb{padding:8px 16px;border:1px solid #e94560;background:0;color:#e94560;border-radius:20px;cursor:pointer;transition:.3s;font-size:14px}
 .nb.active,.nb:hover{background:#e94560;color:#fff}
-.npa{display:grid;grid-template-columns:2fr 1fr;gap:16px}
+.npw{margin-bottom:16px}
 .nvw{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px}
 .nvw iframe{position:absolute;top:0;left:0;width:100%;height:100%}
-.nl{max-height:315px;overflow-y:auto;display:flex;flex-direction:column;gap:8px}
+.nl{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto}
 .ni{display:flex;align-items:flex-start;gap:8px;padding:10px;background:rgba(255,255,255,.05);border-radius:8px;cursor:pointer;transition:.2s}
 .ni:hover,.ni.active{background:rgba(233,69,96,.2)}
 .nf{font-size:12px;white-space:nowrap}
 .nt{font-size:13px;color:#ccc;line-height:1.4}
-@media(max-width:768px){.npa{grid-template-columns:1fr}}
 </style>
-<section class="news-sec">
-<h2>📺 國際財經新聞</h2>
-<div class="nc"><button class="nb active" onclick="fN('all',this)">全部</button><button class="nb" onclick="fN('us',this)">🇺🇸 美國</button><button class="nb" onclick="fN('cn',this)">🇨🇳 中國</button><button class="nb" onclick="fN('asia',this)">🌏 亞洲</button></div>
-<div class="npa">
-<div class="nvw"><iframe id="nf" src="https://www.youtube-nocookie.com/embed/WkiUwyHmRnk?rel=0" frameborder="0" allowfullscreen></iframe></div>
-<div class="nl"><div class="ni" data-r="cn" onclick="playV('WkiUwyHmRnk',this)"><span class="nf">🇨🇳 中國</span><span class="nt">From calls to action: How international guests view 123...</span></div><div class="ni" data-r="cn" onclick="playV('NxEd-9t4wyw',this)"><span class="nf">🇨🇳 中國</span><span class="nt">12345 – a magical number in China!</span></div><div class="ni" data-r="cn" onclick="playV('apgUnojwJwA',this)"><span class="nf">🇨🇳 中國</span><span class="nt">Hotline 12345: One call, one better city</span></div><div class="ni" data-r="cn" onclick="playV('7tUk_qi2LNU',this)"><span class="nf">🇨🇳 中國</span><span class="nt">Can smarter hotlines bring warmth to citizens' hearts?</span></div><div class="ni" data-r="cn" onclick="playV('TRQu2OLAcyE',this)"><span class="nf">🇨🇳 中國</span><span class="nt">Man climbs building to save child hanging from sixth-fl...</span></div><div class="ni" data-r="cn" onclick="playV('S6PVEk47hXE',this)"><span class="nf">🇨🇳 中國</span><span class="nt">No standard answers, only common solutions</span></div><div class="ni" data-r="cn" onclick="playV('ROdOeHpcAxE',this)"><span class="nf">🇨🇳 中國</span><span class="nt">Wang Yi meets Russian presidential aide Nikolai Patrush...</span></div><div class="ni" data-r="cn" onclick="playV('hF1qrhoeq58',this)"><span class="nf">🇨🇳 中國</span><span class="nt">How does Beijing serve residents from 70+ countries? A ...</span></div><div class="ni" data-r="cn" onclick="playV('LgmiC386hEM',this)"><span class="nf">🇨🇳 中國</span><span class="nt">Chinese desert fighter to reunite with American friend ...</span></div><div class="ni" data-r="cn" onclick="playV('NOheKIz1HQ4',this)"><span class="nf">🇨🇳 中國</span><span class="nt">A new Middle East security architecture?</span></div><div class="ni" data-r="asia" onclick="playV('6HchQ48X_cM',this)"><span class="nf">🌏 亞洲</span><span class="nt">It Never Hurts to Have a Conversation | e.l.f. Beauty C...</span></div><div class="ni" data-r="asia" onclick="playV('1O5WKpSmOYo',this)"><span class="nf">🌏 亞洲</span><span class="nt">Why AI could change mobile networks forever</span></div><div class="ni" data-r="asia" onclick="playV('bLElMR7cgAc',this)"><span class="nf">🌏 亞洲</span><span class="nt">2PointZero CEO On AI, Energy And Global Expansion</span></div><div class="ni" data-r="asia" onclick="playV('H7Vm6Ed-wj0',this)"><span class="nf">🌏 亞洲</span><span class="nt">You Can’t Engineer the Timing | State Street CEO Ron O’...</span></div><div class="ni" data-r="asia" onclick="playV('yIDX-ReEvhA',this)"><span class="nf">🌏 亞洲</span><span class="nt">Inside The Hidden Bottleneck In The AI Chip Boom</span></div><div class="ni" data-r="asia" onclick="playV('0dD6-vPX4JQ',this)"><span class="nf">🌏 亞洲</span><span class="nt">Why Japan’s Weak Yen Is So Hard to Fix</span></div><div class="ni" data-r="asia" onclick="playV('FoHxFYNNyNk',this)"><span class="nf">🌏 亞洲</span><span class="nt">AI, Agents and Quantum: The Biggest Cyber Threats Ahead</span></div><div class="ni" data-r="asia" onclick="playV('RxonXJlEJd8',this)"><span class="nf">🌏 亞洲</span><span class="nt">Inside Majid Al Futtaim’s Nearly $30 Billion Expansion</span></div><div class="ni" data-r="asia" onclick="playV('xEtXO_97xEg',this)"><span class="nf">🌏 亞洲</span><span class="nt">Take the Reckless Path | Standard Chartered CEO Bill Wi...</span></div><div class="ni" data-r="asia" onclick="playV('QDwcxkzBYyY',this)"><span class="nf">🌏 亞洲</span><span class="nt">China Is Closing The Gap. Can The West Keep Its AI Lead...</span></div></div>
-</div>
-</section>
-<script>
-const AV=[{"id": "WkiUwyHmRnk", "title": "From calls to action: How international guests view 12345 hotline", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "NxEd-9t4wyw", "title": "12345 – a magical number in China!", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "apgUnojwJwA", "title": "Hotline 12345: One call, one better city", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "7tUk_qi2LNU", "title": "Can smarter hotlines bring warmth to citizens' hearts?", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "TRQu2OLAcyE", "title": "Man climbs building to save child hanging from sixth-floor window in China #coolchina", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "S6PVEk47hXE", "title": "No standard answers, only common solutions", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "ROdOeHpcAxE", "title": "Wang Yi meets Russian presidential aide Nikolai Patrushev in Beijing", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "hF1qrhoeq58", "title": "How does Beijing serve residents from 70+ countries? A new approach to community governance", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "LgmiC386hEM", "title": "Chinese desert fighter to reunite with American friend in Rome", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "NOheKIz1HQ4", "title": "A new Middle East security architecture?", "channel": "UCgrNz-aDmcr2uuto8_DL2jg", "region": "cn", "rname": "🇨🇳 中國"}, {"id": "6HchQ48X_cM", "title": "It Never Hurts to Have a Conversation | e.l.f. Beauty CEO Tarang Amin", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "1O5WKpSmOYo", "title": "Why AI could change mobile networks forever", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "bLElMR7cgAc", "title": "2PointZero CEO On AI, Energy And Global Expansion", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "H7Vm6Ed-wj0", "title": "You Can’t Engineer the Timing | State Street CEO Ron O’Hanley", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "yIDX-ReEvhA", "title": "Inside The Hidden Bottleneck In The AI Chip Boom", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "0dD6-vPX4JQ", "title": "Why Japan’s Weak Yen Is So Hard to Fix", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "FoHxFYNNyNk", "title": "AI, Agents and Quantum: The Biggest Cyber Threats Ahead", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "RxonXJlEJd8", "title": "Inside Majid Al Futtaim’s Nearly $30 Billion Expansion", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "xEtXO_97xEg", "title": "Take the Reckless Path | Standard Chartered CEO Bill Winters", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}, {"id": "QDwcxkzBYyY", "title": "China Is Closing The Gap. Can The West Keep Its AI Lead?", "channel": "UCo7a6riBFJ3tkeHjvkXPn1g", "region": "asia", "rname": "🌏 亞洲"}];
-let CF='all',RT=null;
-function playV(i,e){document.getElementById('nf').src='https://www.youtube-nocookie.com/embed/'+i+'?autoplay=1&rel=0';document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));if(e)e.classList.add('active');if(RT){clearInterval(RT);RT=setInterval(AR,60000)}}
-function fN(r,b){CF=r;document.querySelectorAll('.nb').forEach(x=>x.classList.remove('active'));if(b)b.classList.add('active');document.querySelectorAll('.ni').forEach(x=>{x.style.display=(r==='all'||x.dataset.r===r)?'flex':'none'})}
-let RI=0;function AR(){const V=AV.filter(x=>CF==='all'||x.region===CF);if(V.length<=1)return;RI=(RI+1)%V.length;playV(V[RI].id,null)}
-RT=setInterval(AR,60000);
-</script>
+</head>
+<body>
+<div class="container">
+<h1>📊 智能股票篩選器</h1>
+<div class="sub">最後更新：2026-10-13 10:48</div>
+<div class="macro"><div class="mitem"><div class="label">US CPI</div><div class="val">2.5%</div></div><div class="mitem"><div class="label">US ISM PMI</div><div class="val">54.9</div></div><div class="mitem"><div class="label">US Fed Rate</div><div class="val">4.25%~4.50%</div></div><div class="mitem"><div class="label">China CPI</div><div class="val">0.3%</div></div><div class="mitem"><div class="label">Gold</div><div class="val">2,650</div></div><div class="mitem"><div class="label">Oil (WTI)</div><div class="val">71.2</div></div></div>
+<div class="season-bar"><span>🗓️ 季節：<strong>秋季（偏防禦）</strong></span><span class="pos">建議倉位：50% ~ 60%</span></div>
+<div class="news-sec"><h2>News</h2><div class="nc"><button class="nb active" onclick="fN('us',this)">US</button><button class="nb" onclick="fN('cn',this)">CN</button><button class="nb" onclick="fN('asia',this)">ASIA</button></div><div id="nv-us" style="display:"><div class="npw"><div class="nvw" id="player-us"></div></div><div class="nl"></div></div><div id="nv-cn" style="display:none"><div class="npw"><div class="nvw" id="player-cn"></div></div><div class="nl"><div class="ni" data-r="cn" onclick="playV('WkiUwyHmRnk',this)"><span class="nf">From calls to action: How international guests view 12345 hotline</span></div><div class="ni" data-r="cn" onclick="playV('NxEd-9t4wyw',this)"><span class="nf">12345 – a magical number in China!</span></div><div class="ni" data-r="cn" onclick="playV('apgUnojwJwA',this)"><span class="nf">Hotline 12345: One call, one better city</span></div><div class="ni" data-r="cn" onclick="playV('7tUk_qi2LNU',this)"><span class="nf">Can smarter hotlines bring warmth to citizens' hearts?</span></div><div class="ni" data-r="cn" onclick="playV('TRQu2OLAcyE',this)"><span class="nf">Man climbs building to save child hanging from sixth-floor window in China #coolchina</span></div><div class="ni" data-r="cn" onclick="playV('S6PVEk47hXE',this)"><span class="nf">No standard answers, only common solutions</span></div><div class="ni" data-r="cn" onclick="playV('ROdOeHpcAxE',this)"><span class="nf">Wang Yi meets Russian presidential aide Nikolai Patrushev in Beijing</span></div><div class="ni" data-r="cn" onclick="playV('hF1qrhoeq58',this)"><span class="nf">How does Beijing serve residents from 70+ countries? A new approach to community governance</span></div><div class="ni" data-r="cn" onclick="playV('LgmiC386hEM',this)"><span class="nf">Chinese desert fighter to reunite with American friend in Rome</span></div><div class="ni" data-r="cn" onclick="playV('NOheKIz1HQ4',this)"><span class="nf">A new Middle East security architecture?</span></div></div></div><div id="nv-asia" style="display:none"><div class="npw"><div class="nvw" id="player-asia"></div></div><div class="nl"><div class="ni" data-r="asia" onclick="playV('6HchQ48X_cM',this)"><span class="nf">It Never Hurts to Have a Conversation | e.l.f. Beauty CEO Tarang Amin</span></div><div class="ni" data-r="asia" onclick="playV('1O5WKpSmOYo',this)"><span class="nf">Why AI could change mobile networks forever</span></div><div class="ni" data-r="asia" onclick="playV('bLElMR7cgAc',this)"><span class="nf">2PointZero CEO On AI, Energy And Global Expansion</span></div><div class="ni" data-r="asia" onclick="playV('H7Vm6Ed-wj0',this)"><span class="nf">You Can’t Engineer the Timing | State Street CEO Ron O’Hanley</span></div><div class="ni" data-r="asia" onclick="playV('yIDX-ReEvhA',this)"><span class="nf">Inside The Hidden Bottleneck In The AI Chip Boom</span></div><div class="ni" data-r="asia" onclick="playV('0dD6-vPX4JQ',this)"><span class="nf">Why Japan’s Weak Yen Is So Hard to Fix</span></div><div class="ni" data-r="asia" onclick="playV('FoHxFYNNyNk',this)"><span class="nf">AI, Agents and Quantum: The Biggest Cyber Threats Ahead</span></div><div class="ni" data-r="asia" onclick="playV('RxonXJlEJd8',this)"><span class="nf">Inside Majid Al Futtaim’s Nearly $30 Billion Expansion</span></div><div class="ni" data-r="asia" onclick="playV('xEtXO_97xEg',this)"><span class="nf">Take the Reckless Path | Standard Chartered CEO Bill Winters</span></div><div class="ni" data-r="asia" onclick="playV('QDwcxkzBYyY',this)"><span class="nf">China Is Closing The Gap. Can The West Keep Its AI Lead?</span></div></div></div></div>
 <div class="grid">
 <div class="card">
 <div class="card-header"><span class="code">0002.HK</span><span class="rating" style="background:#00ff8820;color:#00ff88;border:1px solid #00ff88">A</span></div>
@@ -93,5 +74,36 @@ RT=setInterval(AR,60000);
 <div class="note">AI概念回調吸納</div>
 </div></div>
 </div>
+
+<script>
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+var firstScriptTag = document.getElementsByTagName('script')[0];
+firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+var players = {};
+function onYouTubeIframeAPIReady() {
+    document.querySelectorAll('.nvw').forEach(function(el) {
+        var region = el.id.replace('player-','');
+        players[region] = new YT.Player(el.id, { height: '100%', width: '100%', playerVars: { 'playsinline': 1 } });
+    });
+}
+function playV(id, el) {
+    var region = el.getAttribute('data-r');
+    if(players[region]) {
+        players[region].loadVideoById(id);
+        players[region].playVideo();
+    }
+    document.querySelectorAll('.ni.active').forEach(function(n) { n.classList.remove('active'); });
+    el.classList.add('active');
+}
+function fN(region, btn) {
+    document.querySelectorAll('.nb.active').forEach(function(n) { n.classList.remove('active'); });
+    btn.classList.add('active');
+    document.querySelectorAll('[id^="nv-"]').forEach(function(n) { n.style.display = 'none'; });
+    document.getElementById('nv-' + region).style.display = '';
+}
+</script>
+
 </body>
 </html>
