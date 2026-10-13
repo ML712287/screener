@@ -1,105 +1,2832 @@
+
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Yuanbao Capital · 智能篩選儀表板</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 股票篩選器 | Stock Screener</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0f1115;--card:#1a1d24;--gold:#d4a94a;--green:#3fb950;--yellow:#d29922;--red:#f85149;--text:#e6edf3;--sub:#8b949e;--border:#30363d;}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang TC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.5;padding-bottom:env(safe-area-inset-bottom);}
-.wrap{max-width:960px;margin:0 auto;padding:16px;}
-header{text-align:center;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:16px;}
-.logo{font-size:22px;font-weight:800;color:var(--gold);letter-spacing:1px;}
-.logo span{color:var(--text);font-weight:400;font-size:14px;display:block;margin-top:4px;}
-.season-box{background:linear-gradient(135deg,#1f2430,#161a21);border:1px solid var(--gold);border-radius:14px;padding:16px;margin-bottom:16px;}
-.season-box h2{font-size:18px;color:var(--gold);margin-bottom:8px;}
-.season-box .desc{color:var(--sub);font-size:14px;margin-bottom:10px;}
-.season-box .do{color:var(--green);font-size:15px;font-weight:600;}
-.macro{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
-.macro .m{background:var(--card);border-radius:8px;padding:8px;text-align:center;}
-.macro .m .l{font-size:11px;color:var(--sub);}
-.macro .m .v{font-size:16px;font-weight:700;color:var(--text);}
-.alloc-box{background:var(--card);border-radius:14px;padding:16px;margin-bottom:16px;}
-.alloc-box h3{font-size:16px;margin-bottom:12px;color:var(--gold);}
-.alloc-row{display:flex;align-items:center;margin-bottom:8px;}
-.alloc-label{width:110px;font-size:13px;color:var(--sub);flex-shrink:0;}
-.alloc-bar{flex:1;background:#0d1117;border-radius:6px;height:22px;position:relative;overflow:hidden;}
-.alloc-fill{height:100%;background:linear-gradient(90deg,var(--gold),#e8c87a);border-radius:6px;}
-.alloc-pct{position:absolute;right:6px;top:2px;font-size:12px;color:var(--text);}
-.summary{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
-.stat{flex:1;min-width:90px;background:var(--card);border-radius:10px;padding:12px;text-align:center;}
-.stat .num{font-size:24px;font-weight:800;color:var(--gold);}
-.stat .lbl{font-size:12px;color:var(--sub);}
-.section-title{font-size:17px;font-weight:700;margin:20px 0 12px;color:var(--text);}
-.cards{display:flex;flex-direction:column;gap:12px;}
-.card{background:var(--card);border-radius:12px;padding:14px;border-left:4px solid var(--border);}
-.card.grade-A{border-left-color:var(--green);}
-.card.grade-B{border-left-color:var(--yellow);}
-.card.grade-C{border-left-color:var(--red);}
-.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px;}
-.card-title{display:flex;flex-wrap:wrap;align-items:center;gap:6px;}
-.market-badge{font-size:11px;padding:2px 6px;border-radius:4px;color:#fff;}
-.market-badge.港股{background:#d32f2f;}
-.market-badge.A股{background:#c62828;}
-.market-badge.美股{background:#1565c0;}
-.sym{font-weight:700;font-size:15px;}
-.name{font-size:12px;color:var(--sub);width:100%;}
-.card-grade{font-size:18px;font-weight:800;flex-shrink:0;}
-.card-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px;}
-.metric{background:#0d1117;border-radius:6px;padding:6px;text-align:center;}
-.m-label{display:block;font-size:10px;color:var(--sub);}
-.m-val{display:block;font-size:13px;font-weight:600;}
-.card-fw{font-size:12px;color:var(--sub);margin-bottom:8px;}
-.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
-.tag{font-size:11px;background:#21262d;color:var(--gold);padding:2px 8px;border-radius:10px;}
-.card-comment{font-size:13px;color:var(--text);background:#0d1117;border-radius:8px;padding:8px;}
-.entry-block{background:#0d1117;border:1px solid var(--border);border-left:3px solid var(--gold);border-radius:8px;padding:10px 12px;margin-bottom:10px;}
-.entry-row{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;font-size:13px;padding:3px 0;}
-.entry-row + .entry-row{border-top:1px dashed #21262d;}
-.entry-k{color:var(--sub);flex-shrink:0;}
-.entry-v{color:var(--text);font-weight:600;text-align:right;}
-.entry-v.hot{color:var(--red);} .entry-v.cool{color:var(--green);}
-.empty{text-align:center;color:var(--sub);padding:40px 20px;}
-footer{text-align:center;color:var(--sub);font-size:11px;padding:24px 0 40px;}
-@media(max-width:480px){.macro{grid-template-columns:repeat(2,1fr);}.alloc-label{width:80px;font-size:12px;}}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Inter', 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    min-height: 100vh;
+    padding: 20px;
+    color: #e0e0e0;
+}
+.container { max-width: 1440px; margin: 0 auto; }
+
+/* 標題區 */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 35px 30px 30px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 24px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+}
+.header h1 {
+    font-size: 2.4em;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00d2ff, #3a7bd5, #00d2ff);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 3s linear infinite;
+    margin-bottom: 8px;
+}
+@keyframes shine { to { background-position: 200% center; } }
+.header .subtitle { font-size: 1em; color: #999; }
+
+/* 宏觀數據欄 */
+.macro-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+.macro-item {
+    background: rgba(255,255,255,0.07);
+    padding: 14px 22px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    text-align: center;
+    min-width: 130px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.macro-item .label { font-size: 0.8em; color: #aaa; margin-bottom: 5px; }
+.macro-item .value { font-size: 1.25em; font-weight: 600; color: #fff; }
+.season-badge {
+    display: inline-block;
+    padding: 10px 28px;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.15em;
+    margin-top: 18px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.season-spring { background: linear-gradient(135deg, #56ab2f, #a8e063); color: #fff; }
+.season-summer { background: linear-gradient(135deg, #f12711, #f5af19); color: #fff; }
+.season-autumn { background: linear-gradient(135deg, #8E2DE2, #4A00E0); color: #fff; }
+.season-winter { background: linear-gradient(135deg, #00d2ff, #3a7bd5); color: #fff; }
+.alloc-text { margin-top: 12px; font-size: 0.95em; color: #ccc; }
+
+/* ===== 新聞區 ===== */
+.news-section { margin: 28px 0; }
+.news-title { font-size: 1.3em; font-weight: 700; color: #fff; margin-bottom: 12px; }
+.video-win {
+    position: relative; width: 100%; aspect-ratio: 16/9; background: #000;
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.35);
+}
+.video-win iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.news-tabs { display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap; }
+.news-tabs button {
+    background: rgba(255,255,255,0.08); color: #cbd5e1;
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 6px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s;
+}
+.news-tabs button:hover { background: rgba(255,255,255,0.15); }
+.news-tabs button.active { background: linear-gradient(135deg, #00d2ff, #3a7bd5); color: #fff; }
+
+/* 卡片網格 */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+    gap: 22px;
+}
+
+/* 股票卡片 */
+.card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.09), rgba(255,255,255,0.03));
+    border-radius: 18px;
+    padding: 22px;
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 45px rgba(0,0,0,0.45);
+    border-color: rgba(255,255,255,0.28);
+}
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+}
+.card-A::before { background: linear-gradient(90deg, #00b09b, #96c93d); }
+.card-B::before { background: linear-gradient(90deg, #2193b0, #6dd5ed); }
+.card-C::before { background: linear-gradient(90deg, #f7971e, #ffd200); }
+.card-D::before { background: linear-gradient(90deg, #eb3349, #f45c43); }
+
+/* 卡片內容 */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+.card-title { font-size: 1.25em; font-weight: 700; color: #fff; }
+.card-symbol { font-size: 0.82em; color: #999; margin-top: 3px; }
+.rating {
+    padding: 5px 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 0.9em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.rating-A { background: linear-gradient(135deg, #00b09b, #96c93d); color: #fff; }
+.rating-B { background: linear-gradient(135deg, #2193b0, #6dd5ed); color: #fff; }
+.rating-C { background: linear-gradient(135deg, #f7971e, #ffd200); color: #333; }
+.rating-D { background: linear-gradient(135deg, #eb3349, #f45c43); color: #fff; }
+
+.price-row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+.price { font-size: 1.9em; font-weight: 700; color: #fff; }
+.pe-yield { font-size: 0.88em; color: #aaa; }
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 0.88em;
+}
+.data-label { color: #999; }
+.data-value { color: #e0e0e0; font-weight: 500; }
+
+/* 水位條 */
+.water-bar {
+    height: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+    margin: 12px 0 8px;
+    overflow: hidden;
+}
+.water-fill { height: 100%; border-radius: 5px; transition: width 0.6s ease; }
+.water-low { background: linear-gradient(90deg, #00b09b, #96c93d); }
+.water-mid { background: linear-gradient(90deg, #f7971e, #ffd200); }
+.water-high { background: linear-gradient(90deg, #eb3349, #f45c43); }
+
+/* 入貨位區塊 */
+.entry-box {
+    margin-top: 14px;
+    padding: 14px;
+    background: rgba(0,0,0,0.25);
+    border-radius: 12px;
+    border-left: 4px solid #00d2ff;
+}
+.entry-label { font-size: 0.78em; color: #999; margin-bottom: 4px; }
+.entry-value { font-size: 1.05em; color: #00d2ff; font-weight: 600; }
+
+/* 評語 */
+.comment {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    font-size: 0.84em;
+    color: #bbb;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .grid { grid-template-columns: 1fr; }
+    .header h1 { font-size: 1.6em; }
+    .news-tabs { justify-content: center; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="logo">YUANBAO CAPITAL<span>智能股票篩選儀表板 · v3.1</span></div>
-  </header>
-  <div class="season-box">
-    <h2>秋季 · 放緩期</h2>
-    <div class="desc">經濟放緩，通脹降，利率開始降。</div>
-    <div class="do">👉 增持高息股、公用、電訊、長債；減持資源。</div>
-    <div class="macro">
-      <div class="m"><div class="l">美國 GDP</div><div class="v">3.8%</div></div>
-      <div class="m"><div class="l">美 CPI</div><div class="v">2.9%</div></div>
-      <div class="m"><div class="l">美失業率</div><div class="v">4.3%</div></div>
-      <div class="m"><div class="l">中 GDP</div><div class="v">5.2%</div></div>
-      <div class="m"><div class="l">中 CPI</div><div class="v">0.6%</div></div>
-      <div class="m"><div class="l">中 PPI</div><div class="v">-2.5%</div></div>
+<div class="container">
+
+    <div class="header">
+        <h1>📊 智能股票篩選器</h1>
+        <div class="subtitle">Offline Screener · 最後更新：2026-10-13</div>
+        <div class="macro-bar">
+            <div class="macro-item"><div class="label">🇺🇸 美國 CPI</div><div class="value">2.5%</div></div>
+            <div class="macro-item"><div class="label">🇺🇸 ISM PMI</div><div class="value">54.9</div></div>
+            <div class="macro-item"><div class="label">🇺🇸 10年債</div><div class="value">5.19%</div></div>
+            <div class="macro-item"><div class="label">🇨🇳 中國 PMI</div><div class="value">50.6</div></div>
+        </div>
+        <div class="season-badge season-autumn">🌤️ 當前投資季節：秋季（偏防禦）</div>
+        <div class="alloc-text">📋 建議倉位：高息/公用/電訊 35% | 債券 25% | 黃金 15% | 成長 10% | 現金 15%</div>
     </div>
-  </div>
-  <div class="alloc-box">
-    <h3>📊 當前季節建議資產比例</h3>
-    <div class="alloc-row"><span class="alloc-label">高息/公用/電訊</span><div class="alloc-bar"><div class="alloc-fill" style="width:35%"></div><span class="alloc-pct">35%</span></div></div><div class="alloc-row"><span class="alloc-label">債券/長債</span><div class="alloc-bar"><div class="alloc-fill" style="width:25%"></div><span class="alloc-pct">25%</span></div></div><div class="alloc-row"><span class="alloc-label">黃金/資源</span><div class="alloc-bar"><div class="alloc-fill" style="width:15%"></div><span class="alloc-pct">15%</span></div></div><div class="alloc-row"><span class="alloc-label">成長股</span><div class="alloc-bar"><div class="alloc-fill" style="width:10%"></div><span class="alloc-pct">10%</span></div></div><div class="alloc-row"><span class="alloc-label">現金</span><div class="alloc-bar"><div class="alloc-fill" style="width:15%"></div><span class="alloc-pct">15%</span></div></div>
-  </div>
-  <div class="summary">
-    <div class="stat"><div class="num">25</div><div class="lbl">符合條件</div></div>
-    <div class="stat"><div class="num">10</div><div class="lbl">港股</div></div>
-    <div class="stat"><div class="num">4</div><div class="lbl">A股</div></div>
-    <div class="stat"><div class="num">11</div><div class="lbl">美股</div></div>
-  </div>
-  <div class="section-title">🟢 符合「3+2+2」框架 + 秋季節嘅股票</div>
-  <div class="cards"><div class="section-title">🟢 推薦：框架全過 + 秋季節核心</div><div class="cards"><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">KO</span><span class="name">Coca-Cola</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">70.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">2.65</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">26.4</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">10.5</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">2.39%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">42.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">63.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高ROE</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">58.24 - 68.32（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">偏高(PE26)</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">估值偏貴，等回調 16% 至 58.2 附近再入</span></div></div><div class="card-comment">強烈推薦：接近頂，等回調。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">PEP</span><span class="name">PepsiCo</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">165.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">6.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">25.4</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">8.5</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">3.8%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">48.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">54.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高ROE</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">137.28 - 161.04（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">偏高(PE25)</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">估值偏貴，等回調 16% 至 137.3 附近再入</span></div></div><div class="card-comment">強烈推薦：消費，息3.8%。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">JNJ</span><span class="name">Johnson & Johnson</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">158.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">5.2</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">30.4</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">5.8</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">2.02%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">23.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">68.7%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高ROE</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">131.46 - 154.21（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">偏高(PE30)</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">估值偏貴，等回調 16% 至 131.5 附近再入</span></div></div><div class="card-comment">強烈推薦：醫藥門檻全過，但接近頂。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">DUK</span><span class="name">Duke Energy</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">110.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">5.1</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">21.6</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">2.05</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">4.1%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">8.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">24.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">101.20 - 112.20（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±8%）</span></div></div><div class="card-comment">強烈推薦：電力PB分位低，息4.1%，秋季核心。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">SRE</span><span class="name">Sempra</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">82.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">4.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">18.2</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.9</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">4.2%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">9.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">32.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">72.16 - 84.46（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±12%）</span></div></div><div class="card-comment">強烈推薦：公用，息4.2%。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">T</span><span class="name">AT&T</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">22.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">2.1</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">10.7</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.2</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">4.9%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">8.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">58.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">19.80 - 23.18（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±12%）</span></div></div><div class="card-comment">強烈推薦：電訊，息4.9%，但ROE低。 符合框架 + 秋季節核心。</div></div><div class="card grade-A"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">VZ</span><span class="name">Verizon</span></div><div class="card-grade">🟢 A</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">42.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">4.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">9.3</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.6</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">6.5%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">22.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">62.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span> <span class="tag">高ROE</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">36.96 - 43.26（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±12%）</span></div></div><div class="card-comment">強烈推薦：電訊，息6.5%，ROE22.5%。 符合框架 + 秋季節核心。</div></div></div><div class="section-title">🟡 觀望：部分符合框架 + 秋季節</div><div class="cards"><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0002.HK</span><span class="name">中電控股</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">68.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">4.23</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">16.2</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.45</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.23%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">9.8%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">42.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">60.84 - 63.54</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">81%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">接近高位（水位 81%），分兩注：現價半注 + 回調 60.8 加注</span></div></div><div class="card-comment">可考慮：公用門檻過，但EPS+2.8%追唔上股價+22.4%，PE16.2偏貴，減持首選。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0003.HK</span><span class="name">香港中華煤氣</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">7.2</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">0.35</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">20.6</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.8</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">4.8%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">8.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">38.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">7.26 - 7.56</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">35%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">接近低位（水位 35%），可較積極建倉</span></div></div><div class="card-comment">可考慮：公用，息率4.8%，但ROE偏低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0006.HK</span><span class="name">電能實業</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">48.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">3.1</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">15.5</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.1</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.8%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">11.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">45.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">45.80 - 47.30</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">60%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（60%），可分注買入</span></div></div><div class="card-comment">可考慮：公用，息率5.8%，但ROE略低12%。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0836.HK</span><span class="name">華潤電力</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">18.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">1.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">12.3</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.0</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">6.2%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">12.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">25.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">17.66 - 18.71</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">50%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（50%），可分注買入</span></div></div><div class="card-comment">可考慮：電力，息率6.2%，ROE12.5%剛過，可考慮。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0855.HK</span><span class="name">中國水務</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">5.15</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">0.75</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">6.9</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.7</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.57%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">11.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">42.8%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">5.25 - 5.50</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">32%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">接近低位（水位 32%），可較積極建倉</span></div></div><div class="card-comment">可考慮：PE6.9/PB0.7極低，未破頂，但FCF負、債務2.15，做衛星倉。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">01038.HK</span><span class="name">長江基建</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">52.8</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">3.64</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">14.5</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.58</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.3%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">15.6%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">55.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">47.00 - 48.50</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">96%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">已破頂（52週高 53.20），等回調 5-8% 再入</span></div></div><div class="card-comment">可考慮：PB0.58低，息5.3%，但破頂，等回調48-50。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0939.HK</span><span class="name">建設銀行</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">7.2</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">1.25</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">5.8</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.5</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">7.5%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">12.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">6.45 - 6.83</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">68%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（68%），可分注買入</span></div></div><div class="card-comment">可考慮：PE5.8/PB0.5極低，息7.5%，金融。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">0941.HK</span><span class="name">中國移動</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">88.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">7.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">11.8</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.15</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">6.59%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">10.8%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">55.0%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">79.50 - 83.25</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">74%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（74%），可分注買入</span></div></div><div class="card-comment">可考慮：PE11.8最低、息6.59%最高、未破頂，秋季核心。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">2318.HK</span><span class="name">中國平安</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">52.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">5.8</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">9.0</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.85</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.8%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">14.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">47.12 - 50.72</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">58%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（58%），可分注買入</span></div></div><div class="card-comment">可考慮：金融，PE9/PB0.85低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 港股">港股</span><span class="sym">2328.HK</span><span class="name">中國財險</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">11.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">1.1</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">10.5</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">1.1</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">4.5%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">12.8%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">10.71 - 11.38</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">56%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（56%），可分注買入</span></div></div><div class="card-comment">可考慮：金融。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge A股">A股</span><span class="sym">601318.SS</span><span class="name">中國平安</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">58.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">6.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">8.9</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.9</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.2%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">15.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">51.88 - 55.78</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">62%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（62%），可分注買入</span></div></div><div class="card-comment">可考慮：金融，PE8.9/PB0.9低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge A股">A股</span><span class="sym">600036.SS</span><span class="name">招商銀行</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">38.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">5.8</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">6.6</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.85</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">5.5%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">16.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">35.70 - 37.95</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">57%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（57%），可分注買入</span></div></div><div class="card-comment">可考慮：金融，PE6.6/PB0.85極低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge A股">A股</span><span class="sym">601988.SS</span><span class="name">中國銀行</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">4.8</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">0.75</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">6.4</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.55</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">6.2%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">10.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">4.45 - 4.70</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">59%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（59%），可分注買入</span></div></div><div class="card-comment">可考慮：金融，PE6.4/PB0.55極低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge A股">A股</span><span class="sym">601398.SS</span><span class="name">工商銀行</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">6.5</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">0.98</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">6.6</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">0.58</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">6.0%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">11.2%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">None%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高息</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">6.07 - 6.42</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">57%</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">水位合理（57%），可分注買入</span></div></div><div class="card-comment">可考慮：金融，PE6.6/PB0.58極低。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">MCD</span><span class="name">McDonald's</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">295.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">11.2</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">26.3</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">22.5</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">2.4%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">-85.0%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">56.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高毛利</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">245.44 - 287.92（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">偏高(PE26)</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">估值偏貴，等回調 16% 至 245.4 附近再入</span></div></div><div class="card-comment">可考慮：負債爆錶，ROE負，避開。 部分符合，觀望。</div></div><div class="card grade-C"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">NEE</span><span class="name">NextEra Energy</span></div><div class="card-grade">🔴 C</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">78.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">3.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">22.3</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">3.2</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">3.2%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">12.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">38.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">—</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">71.76 - 79.56（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±8%）</span></div></div><div class="card-comment">避開：公用。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">SO</span><span class="name">Southern Co</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">88.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">4.2</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">21.0</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">2.4</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">3.5%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">9.8%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">28.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：3/3 核心 ✅ 全過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">框架全過</span> <span class="tag">季節匹配</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">77.44 - 90.64（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v cool">中</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">無 52週數據，按估值估算入貨區間（防守型 ±12%）</span></div></div><div class="card-comment">可考慮：公用。 部分符合，觀望。</div></div><div class="card grade-B"><div class="card-head"><div class="card-title"><span class="market-badge 美股">美股</span><span class="sym">WMT</span><span class="name">Walmart</span></div><div class="card-grade">🟡 B</div></div><div class="card-metrics"><div class="metric"><span class="m-label">股價</span><span class="m-val">95.0</span></div><div class="metric"><span class="m-label">EPS</span><span class="m-val">2.5</span></div><div class="metric"><span class="m-label">PE</span><span class="m-val">38.0</span></div><div class="metric"><span class="m-label">PB</span><span class="m-val">6.5</span></div><div class="metric"><span class="m-label">息率</span><span class="m-val">1.0%</span></div><div class="metric"><span class="m-label">ROE</span><span class="m-val">22.5%</span></div><div class="metric"><span class="m-label">毛利</span><span class="m-val">24.5%</span></div><div class="metric"><span class="m-label">FCF</span><span class="m-val">正</span></div></div><div class="card-fw">框架：2/3 核心 ⚠️ 部分過 ｜ 否決✅ ｜ 🍂季節匹配</div><div class="card-tags"><span class="tag">季節匹配</span> <span class="tag">高ROE</span></div><div class="entry-block"><div class="entry-row"><span class="entry-k">📍 建議入貨區間</span><span class="entry-v">79.04 - 92.72（估算）</span></div><div class="entry-row"><span class="entry-k">💧 現價水位（52週）</span><span class="entry-v hot">偏高(PE38)</span></div><div class="entry-row"><span class="entry-k">⏳ 下一入貨時機</span><span class="entry-v">估值偏貴，等回調 16% 至 79.0 附近再入</span></div></div><div class="card-comment">可考慮：消費，PE過高。 部分符合，觀望。</div></div></div></div>
-  <footer>
-    生成時間：2026-10-13 07:34 · 宏觀評分：0.5 · 離線數據庫模式<br>
-    數據來源：Yahoo Finance / 公司年報（離線版） · 僅供參考，不構成投資建議<br>
-    ⚠️ 投資有風險，決策需謹慎
-  </footer>
+    <div class="grid">
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中電控股</div>
+                <div class="card-symbol">0002.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">68.5</span>
+            <span class="pe-yield">PE: 16.2 | 息率: 5.23%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">4.23</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.45</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">42.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">9.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">54.0 - 72.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">55.08 - 61.74</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:80.6%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：80.6% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 公用門檻過，但EPS+2.8%追唔上股價+22.4%，PE16.2偏貴，減持首選。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">香港中華煤氣</div>
+                <div class="card-symbol">0003.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">7.2</span>
+            <span class="pe-yield">PE: 20.6 | 息率: 4.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.35</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">38.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">6.5 - 8.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">6.63 - 7.35</div>
+            <div class="water-bar">
+                <div class="water-fill water-low" style="width:35.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：35.0% — 偏低（接近買入區）</div>
+        </div>
+        
+        <div class="comment">💬 公用，息率4.8%，但ROE偏低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">電能實業</div>
+                <div class="card-symbol">0006.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">48.0</span>
+            <span class="pe-yield">PE: 15.5 | 息率: 5.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.1</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">45.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">42.0 - 52.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">42.84 - 46.06</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 公用，息率5.8%，但ROE略低12%。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">太古股份A</div>
+                <div class="card-symbol">0019.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">72.0</span>
+            <span class="pe-yield">PE: 12.4 | 息率: 4.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.65</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">30.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">7.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">4.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">65.0 - 80.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">66.3 - 71.05</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:46.7%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：46.7% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 PB0.65低，但ROE低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">華潤電力</div>
+                <div class="card-symbol">0836.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">18.5</span>
+            <span class="pe-yield">PE: 12.3 | 息率: 6.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.0</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">25.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.0%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">15.0 - 22.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">15.3 - 18.13</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:50.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：50.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電力，息率6.2%，ROE12.5%剛過，可考慮。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國水務</div>
+                <div class="card-symbol">0855.HK</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">5.15</span>
+            <span class="pe-yield">PE: 6.9 | 息率: 5.57%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.75</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.7</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">42.8%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.15%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">4.6 - 6.3</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">4.69 - 5.34</div>
+            <div class="water-bar">
+                <div class="water-fill water-low" style="width:32.4%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：32.4% — 偏低（接近買入區）</div>
+        </div>
+        
+        <div class="comment">💬 PE6.9/PB0.7極低，未破頂，但FCF負、債務2.15，做衛星倉。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">長江基建</div>
+                <div class="card-symbol">01038.HK</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">52.8</span>
+            <span class="pe-yield">PE: 14.5 | 息率: 5.3%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.64</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.58</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">55.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">15.6%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.45%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">43.2 - 53.2</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">44.06 - 47.24</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:96.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：96.0% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 PB0.58低，息5.3%，但破頂，等回調48-50。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">紫金礦業H股</div>
+                <div class="card-symbol">02899.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">22.8</span>
+            <span class="pe-yield">PE: 17.5 | 息率: 1.52%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.3</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.1%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">32.9%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.78%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">14.5 - 24.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">14.79 - 19.11</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:83.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：83.0% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 EPS+89%，股價+25%，破頂都合理，資源對沖。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">騰訊控股</div>
+                <div class="card-symbol">0700.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">520.0</span>
+            <span class="pe-yield">PE: 23.6 | 息率: 0.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">22.0</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">52.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">340.0 - 550.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">346.8 - 436.1</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:85.7%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：85.7% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 成長股，秋季非主場。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國聯通</div>
+                <div class="card-symbol">0762.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">8.5</span>
+            <span class="pe-yield">PE: 11.8 | 息率: 6.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.72</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.75</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">28.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">6.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">6.5 - 9.8</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">6.63 - 7.99</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60.6%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60.6% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 息率6.5%高，但ROE6.5%未過12%，框架唔過。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國石油股份</div>
+                <div class="card-symbol">0857.HK</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">7.8</span>
+            <span class="pe-yield">PE: 9.2 | 息率: 6.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">21.4%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.75%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">6.0 - 9.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">6.12 - 7.35</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 息率6.8%，PE9.2低，資源/能源。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國海洋石油</div>
+                <div class="card-symbol">0883.HK</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">19.5</span>
+            <span class="pe-yield">PE: 8.9 | 息率: 6.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.1</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">55.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">18.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.4%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">15.0 - 23.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">15.3 - 18.62</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:56.2%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：56.2% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 息率6.5%，ROE18.5%，資源。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">建設銀行</div>
+                <div class="card-symbol">0939.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">7.2</span>
+            <span class="pe-yield">PE: 5.8 | 息率: 7.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.25</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">5.5 - 8.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">5.61 - 6.62</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:68.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：68.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 PE5.8/PB0.5極低，息7.5%，金融。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國移動</div>
+                <div class="card-symbol">0941.HK</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">88.5</span>
+            <span class="pe-yield">PE: 11.8 | 息率: 6.59%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">7.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.15</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">55.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">10.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.6%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">70.0 - 95.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">71.4 - 80.85</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:74.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：74.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 PE11.8最低、息6.59%最高、未破頂，秋季核心。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">龍湖集團</div>
+                <div class="card-symbol">0960.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">12.5</span>
+            <span class="pe-yield">PE: 11.4 | 息率: 6.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.55</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">20.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">9.0 - 16.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">9.18 - 12.25</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:50.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：50.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 地產，債務高。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中芯國際</div>
+                <div class="card-symbol">0981.HK</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">38.0</span>
+            <span class="pe-yield">PE: 76.0 | 息率: 0.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">2.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">18.0 - 45.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">18.36 - 30.87</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:74.1%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：74.1% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 PE76/PB分位高，框架唔過。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">快手-W</div>
+                <div class="card-symbol">1024.HK</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">55.0</span>
+            <span class="pe-yield">PE: 45.8 | 息率: 0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">52.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">5.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.3%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">38.0 - 68.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">38.76 - 51.94</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:56.7%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：56.7% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 成長股，秋季非主場。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國神華</div>
+                <div class="card-symbol">1088.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">35.0</span>
+            <span class="pe-yield">PE: 12.5 | 息率: 5.06%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">28.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">14.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.55%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">28.0 - 40.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">28.56 - 33.32</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:58.3%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：58.3% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 資源，息5.06%，ROE14.5%。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國生物製藥</div>
+                <div class="card-symbol">1177.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">4.2</span>
+            <span class="pe-yield">PE: 16.8 | 息率: 3.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.25</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">68.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">13.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.85%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">3.2 - 5.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">3.26 - 4.26</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:43.5%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：43.5% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 醫藥，毛利68%，ROE13.5%。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">比亞迪股份</div>
+                <div class="card-symbol">1211.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">110.0</span>
+            <span class="pe-yield">PE: 10.5 | 息率: 1.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">10.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">24.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">80.0 - 140.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">81.6 - 107.8</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:50.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：50.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 成長股，秋季非主場。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">藥明生物</div>
+                <div class="card-symbol">2269.HK</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">28.0</span>
+            <span class="pe-yield">PE: 31.1 | 息率: 1.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.9</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">42.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">9.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">18.0 - 38.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">18.36 - 27.44</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:50.0%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：50.0% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 醫藥，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國平安</div>
+                <div class="card-symbol">2318.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">52.0</span>
+            <span class="pe-yield">PE: 9.0 | 息率: 5.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">14.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">38.0 - 62.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">38.76 - 49.0</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:58.3%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：58.3% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融，PE9/PB0.85低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國財險</div>
+                <div class="card-symbol">2328.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">11.5</span>
+            <span class="pe-yield">PE: 10.5 | 息率: 4.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.1</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">9.0 - 13.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">9.18 - 11.03</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55.6%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55.6% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">李寧</div>
+                <div class="card-symbol">2331.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">18.0</span>
+            <span class="pe-yield">PE: 20.0 | 息率: 3.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.9</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">48.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">13.0 - 25.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">13.26 - 18.62</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:41.7%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：41.7% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">舜宇光學科技</div>
+                <div class="card-symbol">2382.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">75.0</span>
+            <span class="pe-yield">PE: 26.8 | 息率: 1.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">20.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">50.0 - 95.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">51.0 - 71.05</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55.6%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55.6% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 光學，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">海底撈</div>
+                <div class="card-symbol">6862.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">15.5</span>
+            <span class="pe-yield">PE: 23.8 | 息率: 1.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.65</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">5.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">58.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">24.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">11.0 - 22.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">11.22 - 16.17</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:40.9%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：40.9% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費，成長。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">海爾智家</div>
+                <div class="card-symbol">6690.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">28.0</span>
+            <span class="pe-yield">PE: 12.7 | 息率: 3.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.0</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">30.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">17.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">22.0 - 35.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">22.44 - 27.93</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:46.2%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：46.2% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">蔚來-SW</div>
+                <div class="card-symbol">9866.HK</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">45.0</span>
+            <span class="pe-yield">PE: None | 息率: 0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">-3.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">5.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">28.0 - 65.0</span></div>
+        
+        <div class="comment">💬 虧損，框架唔過。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">阿里巴巴-W</div>
+                <div class="card-symbol">9988.HK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">95.0</span>
+            <span class="pe-yield">PE: 14.6 | 息率: 1.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">38.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.4%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">70.0 - 125.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">71.4 - 95.55</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:45.5%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：45.5% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電商，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">信利國際</div>
+                <div class="card-symbol">00732.HK</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">0.83</span>
+            <span class="pe-yield">PE: 23.7 | 息率: 12.41%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.035</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.55</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">9.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">2.3%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">0.76 - 1.05</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">0.78 - 0.89</div>
+            <div class="water-bar">
+                <div class="water-fill water-low" style="width:24.1%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：24.1% — 偏低（接近買入區）</div>
+        </div>
+        
+        <div class="comment">💬 派息率140%陷阱，迷你倉觀察。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">貴州茅台</div>
+                <div class="card-symbol">600519.SS</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">1680.0</span>
+            <span class="pe-yield">PE: 24.7 | 息率: 1.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">68.0</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">8.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">91.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">1450.0 - 1900.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">1479.0 - 1641.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:51.1%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：51.1% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費龍頭，毛利91.5%，但PE24.7偏高。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國平安</div>
+                <div class="card-symbol">601318.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">58.0</span>
+            <span class="pe-yield">PE: 8.9 | 息率: 5.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.9</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">15.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">42.0 - 68.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">42.84 - 53.9</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:61.5%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：61.5% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融，PE8.9/PB0.9低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">招商銀行</div>
+                <div class="card-symbol">600036.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">38.5</span>
+            <span class="pe-yield">PE: 6.6 | 息率: 5.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">16.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">30.0 - 45.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">30.6 - 36.75</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:56.7%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：56.7% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融，PE6.6/PB0.85極低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國銀行</div>
+                <div class="card-symbol">601988.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">4.8</span>
+            <span class="pe-yield">PE: 6.4 | 息率: 6.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.75</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.55</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">10.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">3.8 - 5.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">3.88 - 4.56</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:58.8%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：58.8% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融，PE6.4/PB0.55極低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">工商銀行</div>
+                <div class="card-symbol">601398.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">6.5</span>
+            <span class="pe-yield">PE: 6.6 | 息率: 6.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.98</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.58</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.2%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">5.2 - 7.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">5.3 - 6.22</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:56.5%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：56.5% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 金融，PE6.6/PB0.58極低。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國石油</div>
+                <div class="card-symbol">601857.SS</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">9.8</span>
+            <span class="pe-yield">PE: 11.5 | 息率: 5.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.05</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">21.4%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.75%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">7.5 - 11.5</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">7.65 - 9.31</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:57.5%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：57.5% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 資源/能源。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國石化</div>
+                <div class="card-symbol">600028.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">6.5</span>
+            <span class="pe-yield">PE: 11.8 | 息率: 6.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.55</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">18.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">5.98 - 6.83</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 資源，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中國神華</div>
+                <div class="card-symbol">601088.SS</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">42.0</span>
+            <span class="pe-yield">PE: 13.1 | 息率: 5.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">28.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">15.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.55%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">38.64 - 44.1</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 資源。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">國電南瑞</div>
+                <div class="card-symbol">600406.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">24.8</span>
+            <span class="pe-yield">PE: 21.4 | 息率: 2.79%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.16</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.54</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">28.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">16.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">22.32 - 25.3</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電力設備，未破頂，政策催化，可入。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">紫金礦業A股</div>
+                <div class="card-symbol">601899.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">20.5</span>
+            <span class="pe-yield">PE: 17.5 | 息率: 1.57%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.17</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.1%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">32.9%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.78%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">17.22 - 18.45</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 EPS+89%，資源對沖。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">工業富聯</div>
+                <div class="card-symbol">601138.SS</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">22.0</span>
+            <span class="pe-yield">PE: 16.3 | 息率: 2.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.35</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">20.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">19.8 - 22.44</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 科技，毛利8.5%低。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">中航光電</div>
+                <div class="card-symbol">002179.SZ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">42.0</span>
+            <span class="pe-yield">PE: 25.0 | 息率: 2.1%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.68</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">15.2%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">37.8 - 42.84</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 軍工，未破頂，盈利追得上。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">萬科A</div>
+                <div class="card-symbol">000002.SZ</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">7.5</span>
+            <span class="pe-yield">PE: None | 息率: 2.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">-0.85</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">0.45</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">None%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">6.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="comment">💬 地產，虧損，債務高。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">美的集團</div>
+                <div class="card-symbol">000333.SZ</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">75.0</span>
+            <span class="pe-yield">PE: 14.4 | 息率: 4.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">26.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">69.0 - 78.75</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費，ROE22.5%，息4.2%。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">格力電器</div>
+                <div class="card-symbol">000651.SZ</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">42.0</span>
+            <span class="pe-yield">PE: 7.6 | 息率: 6.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.85</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">30.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">25.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">38.64 - 44.1</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費，息6.8%，PE7.6低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">五糧液</div>
+                <div class="card-symbol">000858.SZ</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">145.0</span>
+            <span class="pe-yield">PE: 17.7 | 息率: 3.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">8.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">75.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.3%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">130.5 - 147.9</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 消費，毛利75%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">立訊精密</div>
+                <div class="card-symbol">002475.SZ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">42.0</span>
+            <span class="pe-yield">PE: 20.0 | 息率: 1.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">35.28 - 37.8</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 科技，毛利12.5%低。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">牧原股份</div>
+                <div class="card-symbol">002714.SZ</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">48.0</span>
+            <span class="pe-yield">PE: 17.1 | 息率: 2.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">20.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">43.2 - 48.96</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 農業。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">寧德時代</div>
+                <div class="card-symbol">300750.SZ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">245.0</span>
+            <span class="pe-yield">PE: 21.3 | 息率: 1.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">11.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">24.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">205.8 - 220.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 電池，成長。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">邁瑞醫療</div>
+                <div class="card-symbol">300760.SZ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">245.0</span>
+            <span class="pe-yield">PE: 25.0 | 息率: 2.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">9.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">7.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">65.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">32.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.4%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">220.5 - 249.9</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 醫藥，毛利65%，ROE32.5%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Apple</div>
+                <div class="card-symbol">AAPL</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">225.0</span>
+            <span class="pe-yield">PE: 34.6 | 息率: 0.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">52.0</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">45.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">155.0%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">165.0 - 260.0</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （52週真實）</div>
+            <div class="entry-value">168.3 - 208.25</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:63.2%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：63.2% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 成長股，秋季非主場。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Microsoft</div>
+                <div class="card-symbol">MSFT</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">415.0</span>
+            <span class="pe-yield">PE: 33.2 | 息率: 0.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">12.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">11.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">68.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.4%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">348.6 - 373.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 成長股，秋季非主場。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">NVIDIA</div>
+                <div class="card-symbol">NVDA</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">135.0</span>
+            <span class="pe-yield">PE: 54.0 | 息率: 0.03%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">35.0</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">75.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">115.0%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">113.4 - 121.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 半導體過熱，框架唔過。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Alphabet</div>
+                <div class="card-symbol">GOOGL</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">175.0</span>
+            <span class="pe-yield">PE: 23.3 | 息率: 0.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">7.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">57.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">30.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.1%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">147.0 - 157.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 成長股。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Amazon</div>
+                <div class="card-symbol">AMZN</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">195.0</span>
+            <span class="pe-yield">PE: 37.5 | 息率: 0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">8.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">48.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">163.8 - 175.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 成長股。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Meta Platforms</div>
+                <div class="card-symbol">META</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">575.0</span>
+            <span class="pe-yield">PE: 25.6 | 息率: 0.35%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">22.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">9.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">81.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">483.0 - 517.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 成長股。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Visa</div>
+                <div class="card-symbol">V</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">295.0</span>
+            <span class="pe-yield">PE: 30.1 | 息率: 0.7%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">9.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">15.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">73.3%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">49.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.69%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">247.8 - 265.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 EPS+12-15%追得上股價+10.6%，破頂合理，夏季主場。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Mastercard</div>
+                <div class="card-symbol">MA</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">520.0</span>
+            <span class="pe-yield">PE: 35.9 | 息率: 0.65%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">14.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">62.3</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">76.8%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">45.2%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.1%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">436.8 - 468.0</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 EPS+12-15%，夏季主場，但PB62.3高。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Home Depot</div>
+                <div class="card-symbol">HD</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">370.0</span>
+            <span class="pe-yield">PE: 24.5 | 息率: 2.68%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">15.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">17.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">31.4%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">15.6%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">333.0 - 377.4</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 年內-13.7%，未破頂，降息受益。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Coca-Cola</div>
+                <div class="card-symbol">KO</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">70.0</span>
+            <span class="pe-yield">PE: 26.4 | 息率: 2.39%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.65</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">10.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">63.0%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">42.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.82%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">58.8 - 63.0</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 接近頂，等回調。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">PepsiCo</div>
+                <div class="card-symbol">PEP</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">165.0</span>
+            <span class="pe-yield">PE: 25.4 | 息率: 3.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">8.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">54.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">48.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">138.6 - 148.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 消費，息3.8%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">McDonald's</div>
+                <div class="card-symbol">MCD</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">295.0</span>
+            <span class="pe-yield">PE: 26.3 | 息率: 2.4%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">11.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">22.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">56.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">-85.0%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">247.8 - 265.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 負債爆錶，ROE負，避開。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Chevron</div>
+                <div class="card-symbol">CVX</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">145.0</span>
+            <span class="pe-yield">PE: 20.4 | 息率: 3.33%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">7.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.19</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">24.9%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">11.2%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.69%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">130.5 - 147.9</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 能源，PB2.19低，但已升43%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Exxon Mobil</div>
+                <div class="card-symbol">XOM</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">112.0</span>
+            <span class="pe-yield">PE: 21.5 | 息率: 2.44%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.68</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">21.4%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.75%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">100.8 - 114.24</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 能源，但毛利21.4%唔過門檻。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Johnson & Johnson</div>
+                <div class="card-symbol">JNJ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">158.0</span>
+            <span class="pe-yield">PE: 30.4 | 息率: 2.02%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">5.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">68.7%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">23.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.37%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">132.72 - 142.2</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 醫藥門檻全過，但接近頂。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Eli Lilly</div>
+                <div class="card-symbol">LLY</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">760.0</span>
+            <span class="pe-yield">PE: 55.0 | 息率: 0.65%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">13.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">38.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">79.4%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">52.3%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.85%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">638.4 - 684.0</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 由高位-21.5%，ROE52.3%，減肥藥龍頭。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Netflix</div>
+                <div class="card-symbol">NFLX</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">720.0</span>
+            <span class="pe-yield">PE: 43.6 | 息率: 0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">16.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">18.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">42.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">604.8 - 648.0</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 EPS+40-50%追得上股價+35%，破頂合理，夏季主場。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Duke Energy</div>
+                <div class="card-symbol">DUK</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">110.0</span>
+            <span class="pe-yield">PE: 21.6 | 息率: 4.1%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">5.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.05</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">24.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.95%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">101.2 - 115.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電力PB分位低，息4.1%，秋季核心。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Edison Intl</div>
+                <div class="card-symbol">EIX</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">66.0</span>
+            <span class="pe-yield">PE: 21.6 | 息率: 4.8%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.05</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.1</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">22.1%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">6.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.1%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">60.72 - 69.3</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電力，息4.8%，但FCF負、山火風險。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Sempra</div>
+                <div class="card-symbol">SRE</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">82.0</span>
+            <span class="pe-yield">PE: 18.2 | 息率: 4.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">4.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.9</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">32.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">9.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">75.44 - 86.1</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 公用，息4.2%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">NextEra Energy</div>
+                <div class="card-symbol">NEE</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">78.0</span>
+            <span class="pe-yield">PE: 22.3 | 息率: 3.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">38.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">70.2 - 79.56</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 公用。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Southern Co</div>
+                <div class="card-symbol">SO</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">88.0</span>
+            <span class="pe-yield">PE: 21.0 | 息率: 3.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">4.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">2.4</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">28.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">9.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">2.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">79.2 - 89.76</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 公用。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Carnival</div>
+                <div class="card-symbol">CCL</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">22.5</span>
+            <span class="pe-yield">PE: 13.6 | 息率: None%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.65</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">3.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">82.1%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">18.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="comment">💬 郵輪，毛利82.1%，高槓桿。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Royal Caribbean</div>
+                <div class="card-symbol">RCL</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">195.0</span>
+            <span class="pe-yield">PE: 17.4 | 息率: None%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">11.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">48.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">28.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.8%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="comment">💬 郵輪，EPS+70-80%追得上股價+60%，破頂合理。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Vertiv</div>
+                <div class="card-symbol">VRT</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">115.0</span>
+            <span class="pe-yield">PE: 42.6 | 息率: None%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.7</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">12.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">38.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">28.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="comment">💬 電力設備，已升85%炒爆，等回調。</div>
+    </div>
+    
+
+    <div class="card card-D">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Nextracker</div>
+                <div class="card-symbol">NXT</div>
+            </div>
+            <div class="rating rating-D">🔴 D</div>
+        </div>
+        <div class="price-row">
+            <span class="price">52.0</span>
+            <span class="pe-yield">PE: 18.6 | 息率: None%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.8</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">6.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">32.1%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">35.2%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.45%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="comment">💬 太陽能跟蹤，PE18.6低。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Barrick Gold</div>
+                <div class="card-symbol">GOLD</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">18.5</span>
+            <span class="pe-yield">PE: 21.8 | 息率: 2.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">0.85</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">35.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">9.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.4%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">16.65 - 18.87</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 黃金礦，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Newmont</div>
+                <div class="card-symbol">NEM</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">52.0</span>
+            <span class="pe-yield">PE: 20.8 | 息率: 2.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.9</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">32.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">46.8 - 53.04</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:60%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：60% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 黃金礦，ROE未過12%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Franco-Nevada</div>
+                <div class="card-symbol">FNV</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">145.0</span>
+            <span class="pe-yield">PE: 45.3 | 息率: 1.2%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">3.2</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">88.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">121.8 - 130.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 黃金royalty，毛利88.5%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Cameco</div>
+                <div class="card-symbol">CCJ</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">55.0</span>
+            <span class="pe-yield">PE: 40.7 | 息率: 0.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">1.35</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">4.8</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">42.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">12.8%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">0.3%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">46.2 - 49.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 鈾礦。</div>
+    </div>
+    
+
+    <div class="card card-B">
+        <div class="card-header">
+            <div>
+                <div class="card-title">AT&T</div>
+                <div class="card-symbol">T</div>
+            </div>
+            <div class="rating rating-B">🔵 B</div>
+        </div>
+        <div class="price-row">
+            <span class="price">22.5</span>
+            <span class="pe-yield">PE: 10.7 | 息率: 4.9%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.1</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.2</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">58.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">8.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">20.7 - 23.62</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電訊，息4.9%，但ROE低。</div>
+    </div>
+    
+
+    <div class="card card-A">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Verizon</div>
+                <div class="card-symbol">VZ</div>
+            </div>
+            <div class="rating rating-A">🟢 A</div>
+        </div>
+        <div class="price-row">
+            <span class="price">42.0</span>
+            <span class="pe-yield">PE: 9.3 | 息率: 6.5%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">4.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">1.6</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">62.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">3.2%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">38.64 - 44.1</div>
+            <div class="water-bar">
+                <div class="water-fill water-mid" style="width:55%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：55% — 中等</div>
+        </div>
+        
+        <div class="comment">💬 電訊，息6.5%，ROE22.5%。</div>
+    </div>
+    
+
+    <div class="card card-C">
+        <div class="card-header">
+            <div>
+                <div class="card-title">Walmart</div>
+                <div class="card-symbol">WMT</div>
+            </div>
+            <div class="rating rating-C">🟡 C</div>
+        </div>
+        <div class="price-row">
+            <span class="price">95.0</span>
+            <span class="pe-yield">PE: 38.0 | 息率: 1.0%</span>
+        </div>
+        <div class="data-row"><span class="data-label">EPS</span><span class="data-value">2.5</span></div>
+        <div class="data-row"><span class="data-label">PB</span><span class="data-value">6.5</span></div>
+        <div class="data-row"><span class="data-label">Margin</span><span class="data-value">24.5%</span></div>
+        <div class="data-row"><span class="data-label">ROE</span><span class="data-value">22.5%</span></div>
+        <div class="data-row"><span class="data-label">Debt</span><span class="data-value">1.5%</span></div>
+        <div class="data-row"><span class="data-label">52週區間</span><span class="data-value">N/A - N/A</span></div>
+        
+        <div class="entry-box">
+            <div class="entry-label">📍 建議入貨區間 （估算）</div>
+            <div class="entry-value">79.8 - 85.5</div>
+            <div class="water-bar">
+                <div class="water-fill water-high" style="width:82%"></div>
+            </div>
+            <div class="entry-label" style="margin-top:4px">💧 現價水位：82% — 偏高（等回調）</div>
+        </div>
+        
+        <div class="comment">💬 消費，PE過高。</div>
+    </div>
+    </div>
 </div>
 </body>
 </html>
