@@ -1,9 +1,9 @@
 name: Update Screener
 
 on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+  schedule:
+    - cron: '0 0,12 * * *'      # UTC 0點同12點（約香港朝8點、夜晚8點）
+  workflow_dispatch:             # 可以手動撳 Run
 
 permissions:
   contents: write
@@ -12,22 +12,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    - name: Install dependencies
-      run: |
-        pip install yfinance pandas
+      - run: pip install requests
 
-    - name: Run screener
-      run: |
-        python screener_offline.py
+      - name: Fetch news
+        env:
+          YT_API_KEY: ${{ secrets.YT_API_KEY }}
+        run: python fetch_news.py
 
-    - name: Commit and push updated report
+      - run: python screener_offline.py
+
+      - name: Commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add report.html news.json
+          git diff --staged --quiet || git commit -m "Auto-update report+news"
+          git push
+
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
