@@ -7,9 +7,39 @@
     "channel": "UCgrNz-aDmcr2uuto8_DL2jg",
     "videos": [
       {
-        "id": "Q2OMTZzA48U",
+        "id": "BQWJs2eZpBM",
+        "title": "From Karakoram to Arabian Sea, Ep. 3: A Friendship Across Generations",
+        "thumb": "https://i.ytimg.com/vi/BQWJs2eZpBM/default.jpg"
+      },
+      {
+        "id": "x0j5Z_o0dPQ",
+        "title": "Lagarde praises China's achievements in poverty reduction and green development",
+        "thumb": "https://i.ytimg.com/vi/x0j5Z_o0dPQ/default.jpg"
+      },
+      {
+        "id": "VffcSLtorzM",
+        "title": "ECB chief: Controlling AI's direction matters more than closing the gap",
+        "thumb": "https://i.ytimg.com/vi/VffcSLtorzM/default.jpg"
+      },
+      {
+        "id": "WlHulrhqkOE",
         "title": "21 years of persistence: China's first WLF Prize laureate Shao Feng",
-        "thumb": "https://i.ytimg.com/vi/Q2OMTZzA48U/default.jpg"
+        "thumb": "https://i.ytimg.com/vi/WlHulrhqkOE/default.jpg"
+      },
+      {
+        "id": "5VTGGfkyHts",
+        "title": "Super-large zirconium mine discovered in Xinjiang Uygur Autonomous Region #coolchina",
+        "thumb": "https://i.ytimg.com/vi/5VTGGfkyHts/default.jpg"
+      },
+      {
+        "id": "u6Rz5B9RM-Y",
+        "title": "Fujian coast guard conducts routine patrols in waters near Kinmen",
+        "thumb": "https://i.ytimg.com/vi/u6Rz5B9RM-Y/default.jpg"
+      },
+      {
+        "id": "84vbsjPNDCE",
+        "title": "Stringer Dispatch: Spaniards demand tougher rail safety after crash",
+        "thumb": "https://i.ytimg.com/vi/84vbsjPNDCE/default.jpg"
       },
       {
         "id": "XrPE0efq3ZQ",
@@ -25,42 +55,17 @@
         "id": "d6zDZd1grWM",
         "title": "Trappes rally honors shooting victims and condemns racism#worldnow",
         "thumb": "https://i.ytimg.com/vi/d6zDZd1grWM/default.jpg"
-      },
-      {
-        "id": "E86EJ1tnV_g",
-        "title": "Act to Action: What Chilean products would locals recommend to China?",
-        "thumb": "https://i.ytimg.com/vi/E86EJ1tnV_g/default.jpg"
-      },
-      {
-        "id": "MbmBwL3R8M0",
-        "title": "HK, Macao and Zhuhai captured in one stunning sunset view #coolchina",
-        "thumb": "https://i.ytimg.com/vi/MbmBwL3R8M0/default.jpg"
-      },
-      {
-        "id": "M7XIMJFz9Nc",
-        "title": "Dance enthusiast Qisrina invites you to take #APECDanceChallenge",
-        "thumb": "https://i.ytimg.com/vi/M7XIMJFz9Nc/default.jpg"
-      },
-      {
-        "id": "kkjPiQIcMvc",
-        "title": "Heavy snow hits Heilongjiang's Greater Khingan Mountains#worldnow",
-        "thumb": "https://i.ytimg.com/vi/kkjPiQIcMvc/default.jpg"
-      },
-      {
-        "id": "RejrR9Z25KY",
-        "title": "The Hype: Chinese style finds a place in a Russian wardrobe #thehype",
-        "thumb": "https://i.ytimg.com/vi/RejrR9Z25KY/default.jpg"
-      },
-      {
-        "id": "dN6gfpJUfWw",
-        "title": "The Hype: 'Why have I been using a fork for so long?' #thehype",
-        "thumb": "https://i.ytimg.com/vi/dN6gfpJUfWw/default.jpg"
       }
     ]
   },
   "asia": {
     "channel": "UCo7a6riBFJ3tkeHjvkXPn1g",
     "videos": [
+      {
+        "id": "b1Mpu0BSchA",
+        "title": "Why AI Agents Are Becoming a Security Risk for Businesses",
+        "thumb": "https://i.ytimg.com/vi/b1Mpu0BSchA/default.jpg"
+      },
       {
         "id": "AFkiBtw4CzA",
         "title": "Can Dubai's Luxury Hotels Defy the Regional Slowdown?",
@@ -105,11 +110,6 @@
         "id": "yIDX-ReEvhA",
         "title": "Inside The Hidden Bottleneck In The AI Chip Boom",
         "thumb": "https://i.ytimg.com/vi/yIDX-ReEvhA/default.jpg"
-      },
-      {
-        "id": "0dD6-vPX4JQ",
-        "title": "Why Japan’s Weak Yen Is So Hard to Fix",
-        "thumb": "https://i.ytimg.com/vi/0dD6-vPX4JQ/default.jpg"
       }
     ]
   }
